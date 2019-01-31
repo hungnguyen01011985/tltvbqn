@@ -39,10 +39,10 @@ public class QThamSo extends EntityPathBase<ThamSo> {
     public final DateTimePath<java.util.Date> ngayTao;
 
     // inherited
-    public final vn.toancauxanh.model.QNhanVien nguoiSua;
+    public final vn.toancauxanh.model.QNguoiDung nguoiSua;
 
     // inherited
-    public final vn.toancauxanh.model.QNhanVien nguoiTao;
+    public final vn.toancauxanh.model.QNguoiDung nguoiTao;
 
     //inherited
     public final StringPath trangThai;

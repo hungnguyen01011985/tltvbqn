@@ -17,7 +17,7 @@ import org.zkoss.bind.sys.ValidationMessages;
 import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.util.resource.Labels;
 
-import vn.toancauxanh.model.NhanVien;
+import vn.toancauxanh.model.NguoiDung;
 
 public class BasicService<T> extends BaseObject<T> {
 
@@ -73,10 +73,10 @@ public class BasicService<T> extends BaseObject<T> {
 		return fixDenNgay;
 	}
 	
-	public NhanVien getNhanVien(boolean isSave, boolean toLoginIfNull, HttpServletRequest req, HttpServletResponse res) {
-		NhanVien nhanVien = null;
-		String key = getClass() + "." + NhanVien.class;
-		nhanVien = (NhanVien) req.getAttribute(key);
+	public NguoiDung getNhanVien(boolean isSave, boolean toLoginIfNull, HttpServletRequest req, HttpServletResponse res) {
+		NguoiDung nhanVien = null;
+		String key = getClass() + "." + NguoiDung.class;
+		nhanVien = (NguoiDung) req.getAttribute(key);
 		if (nhanVien == null || nhanVien.noId()) {
 			Object token = null;
 			Cookie[] cookies = req.getCookies();
@@ -94,7 +94,7 @@ public class BasicService<T> extends BaseObject<T> {
 			}
 			if (token != null) {
 				String[] parts = new String(Base64.decodeBase64(token.toString())).split(":");
-				NhanVien nhanVienLogin = em().find(NhanVien.class, NumberUtils.toLong(parts[0], 0));
+				NguoiDung nhanVienLogin = em().find(NguoiDung.class, NumberUtils.toLong(parts[0], 0));
 				if (parts.length == 3 && nhanVienLogin != null) {
 					long expire = NumberUtils.toLong(parts[1], 0);
 					if (expire > System.currentTimeMillis() && token.equals(nhanVienLogin.getCookieToken(expire))) {
@@ -106,7 +106,7 @@ public class BasicService<T> extends BaseObject<T> {
 				if (nhanVien == null) {
 					bootstrapNhanVien();
 				}
-				nhanVien = new NhanVien();
+				nhanVien = new NguoiDung();
 				if (token != null) {
 					req.getSession().removeAttribute("email");
 				}

@@ -2,8 +2,8 @@
 	<zscript>
 		<![CDATA[
 			entry = new vn.toancauxanh.service.BaseObject().core();
-			vn.toancauxanh.model.NhanVien nhanVien = entry.getNhanVien();
-			if (nhanVien.getTatCaQuyens().contains(entry.core().NGUOIDUNGLIST)) {
+			vn.toancauxanh.model.NguoiDung nguoiDung = entry.getNguoiDung();
+			if (nguoiDung.getTatCaQuyens().contains(entry.core().NGUOIDUNGLIST)) {
 				desktop.setCurrentDirectory("/WEB-INF/zul");
 				Executions.forward("/WEB-INF/zul/home.zul?resource=nguoidung&action=lietke&file=/WEB-INF/zul/nguoidung/list.zul");
 			} else {

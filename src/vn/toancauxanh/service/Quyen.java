@@ -6,7 +6,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.shiro.realm.AuthorizingRealm;
 
-import vn.toancauxanh.model.NhanVien;
+import vn.toancauxanh.model.NguoiDung;
 
 public final class Quyen extends HashMap<String, Boolean> {
 
@@ -24,7 +24,7 @@ public final class Quyen extends HashMap<String, Boolean> {
 		resource = resource_;
 	}
 
-	public Quyen(AuthorizingRealm realm_, String resource_, long id_, NhanVien nguoiTao_) {
+	public Quyen(AuthorizingRealm realm_, String resource_, long id_, NguoiDung nguoiTao_) {
 		this(realm_, resource_);
 		resource = resource_;
 		id = id_;
@@ -39,7 +39,7 @@ public final class Quyen extends HashMap<String, Boolean> {
 
 	private String resource = "";
 	private long id;
-	private NhanVien nguoiTao;
+	private NguoiDung nguoiTao;
 
 	@Override
 	public Boolean get(Object key_) {
@@ -49,7 +49,7 @@ public final class Quyen extends HashMap<String, Boolean> {
 			return false;
 		}
 
-		if (id != 0 && nguoiTao != null && nguoiTao.equals(new BasicService<>().core().getNhanVien())) {
+		if (id != 0 && nguoiTao != null && nguoiTao.equals(new BasicService<>().core().getNguoiDung())) {
 			return true;
 		}
 		String key = key_.toString();

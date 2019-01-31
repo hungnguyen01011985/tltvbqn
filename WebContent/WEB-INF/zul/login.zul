@@ -11,7 +11,7 @@
 <?script type="text/javascript" src="/assets/toastr/build/toastr.min.js" ?>
 <?link rel="icon" href="/assets/icon-bxtdn/logo_new.ico" type="image/x-icon" ?>
 <window xmlns:zk="zk" xmlns:n="native" xmlns:x="xhtml" id="wdn" xmlns:z="zul" width="400px" class="location-form-login"
-	viewModel="@id('vm') @init('vn.toancauxanh.service.NhanVienService')" validationMessages="@id('vmsgs')">
+	viewModel="@id('vm') @init('vn.toancauxanh.service.NguoiDungService')" validationMessages="@id('vmsgs')">
 	<style>
 		.z-page {
 			background-image: url("login/img/background.png");

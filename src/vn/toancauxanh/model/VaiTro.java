@@ -78,10 +78,10 @@ public class VaiTro extends Model<VaiTro> {
 	}
 
 	@Transient
-	public List<NhanVien> getListNhanVien() {
-		JPAQuery<NhanVien> q = find(NhanVien.class)
-				.where(QNhanVien.nhanVien.trangThai.ne(core().TT_DA_XOA))
-				.where(QNhanVien.nhanVien.vaiTros.contains(this));
+	public List<NguoiDung> getListNhanVien() {
+		JPAQuery<NguoiDung> q = find(NguoiDung.class)
+				.where(QNguoiDung.nguoiDung.trangThai.ne(core().TT_DA_XOA))
+				.where(QNguoiDung.nguoiDung.vaiTros.contains(this));
 		return q.fetch();
 	}
 	

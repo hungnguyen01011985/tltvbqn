@@ -38,13 +38,6 @@ public class VanBanDenService {
 	}
 	
 	public PagingObject<VanBan> saveAllVanBanDen(Pageable pageable) throws Exception {
-		File filetest = new File("/resources/edoc_new.edxml"); 
-		 System.out.println(filetest.getPath());
-		    InputStream input = new FileInputStream(filetest);
-		    Ed edtest =  EdXmlParser.getInstance().parse(input);
-		    System.out.println(edtest.getHeader());
-		     MessageHeader messageHeader = (MessageHeader) edtest.getHeader().getMessageHeader();
-		     System.out.println(messageHeader.getDocumentId()+"hung");
 		System.out.println(123);
 		KnobstickServiceImp knobstickService = new KnobstickServiceImp();
 		System.out.println("hung123");

@@ -63,7 +63,7 @@ import vn.toancauxanh.service.Quyen;
 
 @Entity
 @Table(name = "nhanvien")
-public class NhanVien extends Model<NhanVien> {
+public class NguoiDung extends Model<NguoiDung> {
 	private String chucVu = "";
 	private String diaChi = "";
 	private String email = "";
@@ -214,11 +214,11 @@ public class NhanVien extends Model<NhanVien> {
 		return result;
 	}
 
-	public NhanVien() {
+	public NguoiDung() {
 		super();
 	}
 
-	public NhanVien(final String email_, final String _hoTen) {
+	public NguoiDung(final String email_, final String _hoTen) {
 		super();
 		email = email_;
 		hoVaTen = _hoTen;
@@ -449,7 +449,7 @@ public class NhanVien extends Model<NhanVien> {
 
 	@Command
 	public void deleteNhanVienInListVaiTro(@BindingParam("vaitro") final VaiTro vt,
-			@BindingParam("nhanvien") final NhanVien nv) {
+			@BindingParam("nhanvien") final NguoiDung nv) {
 		Messagebox.show("Bạn có chắc chắn muốn xóa vai trò " + vt.getTenVaiTro() + " của nhân viên " + nv.getHoVaTen(),
 				"Xác nhận", Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION, new EventListener<Event>() {
 					@Override
@@ -496,7 +496,7 @@ public class NhanVien extends Model<NhanVien> {
 	}
 
 	@Command
-	public void deleteAvatarImage(@BindingParam("vm") NhanVien nhanVien) {
+	public void deleteAvatarImage(@BindingParam("vm") NguoiDung nhanVien) {
 		Messagebox.show("Bạn có chắc chắn muốn xóa hình ảnh này ", "Xác nhận", Messagebox.OK | Messagebox.CANCEL,
 				Messagebox.QUESTION, new EventListener<Event>() {
 					@Override
@@ -595,10 +595,10 @@ public class NhanVien extends Model<NhanVien> {
 				} else if (!value.trim().matches(".+@.+\\.[a-z]+")) {
 					addInvalidMessage(ctx, "error", "Email không đúng định dạng");
 				} else {
-					JPAQuery<NhanVien> q = find(NhanVien.class).where(QNhanVien.nhanVien.email.eq(value))
-							.where(QNhanVien.nhanVien.trangThai.ne(core().TT_DA_XOA));
-					if (!NhanVien.this.noId()) {
-						q.where(QNhanVien.nhanVien.id.ne(getId()));
+					JPAQuery<NguoiDung> q = find(NguoiDung.class).where(QNguoiDung.nguoiDung.email.eq(value))
+							.where(QNguoiDung.nguoiDung.trangThai.ne(core().TT_DA_XOA));
+					if (!NguoiDung.this.noId()) {
+						q.where(QNguoiDung.nguoiDung.id.ne(getId()));
 					}
 					if (q.fetchCount() > 0) {
 						addInvalidMessage(ctx, "error", "Email đã được sử dụng");
@@ -657,7 +657,7 @@ public class NhanVien extends Model<NhanVien> {
 	}
 
 	@Command
-	public void lockNhanVien(@BindingParam("vm") Object vm, @BindingParam("object") NhanVien object) {
+	public void lockNhanVien(@BindingParam("vm") Object vm, @BindingParam("object") NguoiDung object) {
 		Messagebox.show("Bạn có muốn khóa nhân viên này ?", "Khóa nhân viên", Messagebox.OK | Messagebox.CANCEL,
 				Messagebox.QUESTION, new EventListener<Event>() {
 					@Override
@@ -707,7 +707,7 @@ public class NhanVien extends Model<NhanVien> {
 
 	@Transient
 	public AbstractValidator getValidateMatKhauCu() {
-		NhanVien nhanVien = this;
+		NguoiDung nhanVien = this;
 		return new AbstractValidator() {
 			@Override
 			public void validate(final ValidationContext ctx) {
@@ -736,19 +736,6 @@ public class NhanVien extends Model<NhanVien> {
 		};
 	}
 
-	@Transient
-	public AbstractValidator getValidatePhongBan() {
-		return new AbstractValidator() {
-			@Override
-			public void validate(final ValidationContext ctx) {
-				Object value = (Object) ctx.getProperty().getValue();
-				if (value == null) {
-					addInvalidMessage(ctx, "error", "Bạn chưa chọn phòng ban");
-				}
-			}
-		};
-	}
-
 	@Command
 	public void cancelNoVm(@BindingParam("wdn") Window wdn) {
 		wdn.detach();
@@ -767,22 +754,6 @@ public class NhanVien extends Model<NhanVien> {
 					if (value.length() < 6) {
 						addInvalidMessage(ctx, "Mật khẩu phải có tối thiểu 6 kí tự");
 					}
-				}
-			}
-		};
-	}
-
-	@Transient
-	public AbstractValidator getValidateMatKhau() {
-		return new AbstractValidator() {
-			@Override
-			public void validate(final ValidationContext ctx) {
-				String value = ((String) ctx.getProperty().getValue()).trim().replaceAll("\\s+", "");
-				if ("".equals(value) && value.isEmpty()) {
-					addInvalidMessage(ctx, "Mật khẩu mới không để trống");
-				}
-				if (value.length() < 6) {
-					addInvalidMessage(ctx, "Mật khẩu phải có tối thiểu 6 kí tự");
 				}
 			}
 		};
@@ -829,8 +800,8 @@ public class NhanVien extends Model<NhanVien> {
 	}
 
 	@Command
-	public void updateNhanVien(@BindingParam("vm") NhanVien vm, @BindingParam("wdn") Window wdn,
-			@BindingParam("vm2") NhanVien vm2) throws IOException {
+	public void updateNhanVien(@BindingParam("vm") NguoiDung vm, @BindingParam("wdn") Window wdn,
+			@BindingParam("vm2") NguoiDung vm2) throws IOException {
 		if (matKhauUpdate != null && !"".equals(matKhauUpdate)) {
 			matKhau2 = matKhauUpdate;
 			updatePassword(matKhau2);
@@ -857,17 +828,17 @@ public class NhanVien extends Model<NhanVien> {
 	}
 
 	@Command
-	public void close(@BindingParam("wdn") Window wdn, @BindingParam("vm") NhanVien nhanVien)
+	public void close(@BindingParam("wdn") Window wdn, @BindingParam("vm") NguoiDung nhanVien)
 			throws FileNotFoundException, IOException {
-		JPAQuery<NhanVien> q = find(NhanVien.class).where(QNhanVien.nhanVien.eq(nhanVien));
+		JPAQuery<NguoiDung> q = find(NguoiDung.class).where(QNguoiDung.nguoiDung.eq(nhanVien));
 		nhanVien = q.fetchOne();
 		BindUtils.postNotifyChange(null, null, nhanVien, "*");
 		wdn.detach();
 	}
 
 	@Command
-	public void redirectEditUser(@BindingParam("zul") String zul, @BindingParam("vm") NhanVien vm) {
-		NhanVien nhanVienEdit = find(NhanVien.class).where(QNhanVien.nhanVien.eq(vm)).fetchFirst();
+	public void redirectEditUser(@BindingParam("zul") String zul, @BindingParam("vm") NguoiDung vm) {
+		NguoiDung nhanVienEdit = find(NguoiDung.class).where(QNguoiDung.nguoiDung.eq(vm)).fetchFirst();
 		Map<String, Object> args = new HashMap<>();
 		args.put("vm", nhanVienEdit);
 		args.put("vm2", vm);

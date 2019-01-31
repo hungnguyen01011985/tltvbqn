@@ -43,10 +43,10 @@ public class QVaiTro extends EntityPathBase<VaiTro> {
     public final DateTimePath<java.util.Date> ngayTao;
 
     // inherited
-    public final QNhanVien nguoiSua;
+    public final QNguoiDung nguoiSua;
 
     // inherited
-    public final QNhanVien nguoiTao;
+    public final QNguoiDung nguoiTao;
 
     public final SetPath<String, StringPath> quyens = this.<String, StringPath>createSet("quyens", String.class, StringPath.class, PathInits.DIRECT2);
 

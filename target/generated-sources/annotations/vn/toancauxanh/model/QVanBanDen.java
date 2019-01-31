@@ -41,10 +41,10 @@ public class QVanBanDen extends EntityPathBase<VanBanDen> {
     public final DateTimePath<java.util.Date> ngayTao;
 
     // inherited
-    public final QNhanVien nguoiSua;
+    public final QNguoiDung nguoiSua;
 
     // inherited
-    public final QNhanVien nguoiTao;
+    public final QNguoiDung nguoiTao;
 
     //inherited
     public final StringPath trangThai;

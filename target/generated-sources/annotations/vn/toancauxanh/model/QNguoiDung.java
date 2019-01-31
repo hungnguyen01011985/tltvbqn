@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QNhanVien is a Querydsl query type for NhanVien
+ * QNguoiDung is a Querydsl query type for NguoiDung
  */
 @Generated("com.querydsl.codegen.EntitySerializer")
-public class QNhanVien extends EntityPathBase<NhanVien> {
+public class QNguoiDung extends EntityPathBase<NguoiDung> {
 
-    private static final long serialVersionUID = 755098746L;
+    private static final long serialVersionUID = 805708009L;
 
     private static final PathInits INITS = new PathInits("*", "nguoiSua.*.*.*.*", "nguoiTao.*.*.*.*");
 
-    public static final QNhanVien nhanVien = new QNhanVien("nhanVien");
+    public static final QNguoiDung nguoiDung = new QNguoiDung("nguoiDung");
 
     public final QModel _super;
 
@@ -51,10 +51,10 @@ public class QNhanVien extends EntityPathBase<NhanVien> {
     public final DateTimePath<java.util.Date> ngayTao;
 
     // inherited
-    public final QNhanVien nguoiSua;
+    public final QNguoiDung nguoiSua;
 
     // inherited
-    public final QNhanVien nguoiTao;
+    public final QNguoiDung nguoiTao;
 
     public final StringPath pathAvatar = createString("pathAvatar");
 
@@ -75,23 +75,23 @@ public class QNhanVien extends EntityPathBase<NhanVien> {
 
     public final SetPath<VaiTro, QVaiTro> vaiTros = this.<VaiTro, QVaiTro>createSet("vaiTros", VaiTro.class, QVaiTro.class, PathInits.DIRECT2);
 
-    public QNhanVien(String variable) {
-        this(NhanVien.class, forVariable(variable), INITS);
+    public QNguoiDung(String variable) {
+        this(NguoiDung.class, forVariable(variable), INITS);
     }
 
-    public QNhanVien(Path<? extends NhanVien> path) {
+    public QNguoiDung(Path<? extends NguoiDung> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QNhanVien(PathMetadata metadata) {
+    public QNguoiDung(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QNhanVien(PathMetadata metadata, PathInits inits) {
-        this(NhanVien.class, metadata, inits);
+    public QNguoiDung(PathMetadata metadata, PathInits inits) {
+        this(NguoiDung.class, metadata, inits);
     }
 
-    public QNhanVien(Class<? extends NhanVien> type, PathMetadata metadata, PathInits inits) {
+    public QNguoiDung(Class<? extends NguoiDung> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this._super = new QModel(type, metadata, inits);
         this.daXoa = _super.daXoa;

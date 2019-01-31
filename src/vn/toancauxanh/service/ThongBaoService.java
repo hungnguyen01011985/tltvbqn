@@ -21,7 +21,7 @@ public class ThongBaoService extends BasicService<ThongBao> {
 		String param = MapUtils.getString(argDeco(), "tuKhoa", "").trim();
 		String loaiThongBao = MapUtils.getString(argDeco(), "loaiThongBao", "");
 		String trangThai = MapUtils.getString(argDeco(), "trangThai", "").trim();
-		JPAQuery<ThongBao> q = find(ThongBao.class).where(QThongBao.thongBao.nguoiNhan.eq(core().getNhanVien()))
+		JPAQuery<ThongBao> q = find(ThongBao.class).where(QThongBao.thongBao.nguoiNhan.eq(core().getNguoiDung()))
 				.orderBy(QThongBao.thongBao.ngayTao.desc());
 		if (param != null && !param.isEmpty() && !"".equals(param)) {
 			String tuKhoa = "%" + param + "%";

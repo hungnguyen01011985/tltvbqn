@@ -7,14 +7,14 @@ import org.apache.commons.collections.MapUtils;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.zk.ui.Executions;
 
-import vn.toancauxanh.model.NhanVien;
+import vn.toancauxanh.model.NguoiDung;
 
 public class HeaderService extends FrontService {
-	private NhanVien user;
+	private NguoiDung user;
 
-	public NhanVien getUser() {
+	public NguoiDung getUser() {
 		if (user == null) {
-			user = getNhanVien();
+			user = getNguoiDung();
 		}
 		return user;
 	}

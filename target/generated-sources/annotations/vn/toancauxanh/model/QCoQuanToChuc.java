@@ -43,10 +43,10 @@ public class QCoQuanToChuc extends EntityPathBase<CoQuanToChuc> {
     public final DateTimePath<java.util.Date> ngayTao;
 
     // inherited
-    public final QNhanVien nguoiSua;
+    public final QNguoiDung nguoiSua;
 
     // inherited
-    public final QNhanVien nguoiTao;
+    public final QNguoiDung nguoiTao;
 
     public final BooleanPath noiBo = createBoolean("noiBo");
 

@@ -44,15 +44,15 @@ public class QThongBao extends EntityPathBase<ThongBao> {
     //inherited
     public final DateTimePath<java.util.Date> ngayTao;
 
-    public final QNhanVien nguoiGui;
+    public final QNguoiDung nguoiGui;
 
-    public final QNhanVien nguoiNhan;
-
-    // inherited
-    public final QNhanVien nguoiSua;
+    public final QNguoiDung nguoiNhan;
 
     // inherited
-    public final QNhanVien nguoiTao;
+    public final QNguoiDung nguoiSua;
+
+    // inherited
+    public final QNguoiDung nguoiTao;
 
     public final StringPath noiDung = createString("noiDung");
 
@@ -84,8 +84,8 @@ public class QThongBao extends EntityPathBase<ThongBao> {
         this.id = _super.id;
         this.ngaySua = _super.ngaySua;
         this.ngayTao = _super.ngayTao;
-        this.nguoiGui = inits.isInitialized("nguoiGui") ? new QNhanVien(forProperty("nguoiGui"), inits.get("nguoiGui")) : null;
-        this.nguoiNhan = inits.isInitialized("nguoiNhan") ? new QNhanVien(forProperty("nguoiNhan"), inits.get("nguoiNhan")) : null;
+        this.nguoiGui = inits.isInitialized("nguoiGui") ? new QNguoiDung(forProperty("nguoiGui"), inits.get("nguoiGui")) : null;
+        this.nguoiNhan = inits.isInitialized("nguoiNhan") ? new QNguoiDung(forProperty("nguoiNhan"), inits.get("nguoiNhan")) : null;
         this.nguoiSua = _super.nguoiSua;
         this.nguoiTao = _super.nguoiTao;
         this.trangThai = _super.trangThai;

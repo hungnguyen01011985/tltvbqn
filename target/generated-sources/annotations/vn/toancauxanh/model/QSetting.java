@@ -73,10 +73,10 @@ public class QSetting extends EntityPathBase<Setting> {
     public final BooleanPath ngheNghiep = createBoolean("ngheNghiep");
 
     // inherited
-    public final QNhanVien nguoiSua;
+    public final QNguoiDung nguoiSua;
 
     // inherited
-    public final QNhanVien nguoiTao;
+    public final QNguoiDung nguoiTao;
 
     public final BooleanPath noiCapCMND = createBoolean("noiCapCMND");
 

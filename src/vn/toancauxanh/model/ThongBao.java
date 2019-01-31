@@ -21,8 +21,8 @@ import vn.toancauxanh.gg.model.enums.ThongBaoEnum;
 public class ThongBao extends Model<ThongBao> {
 	@Lob
 	private String noiDung;
-	private NhanVien nguoiGui;
-	private NhanVien nguoiNhan;
+	private NguoiDung nguoiGui;
+	private NguoiDung nguoiNhan;
 	private LoaiThongBao loaiThongBao;
 	private boolean daXem;
 	private ThongBaoEnum kieuThongBao;
@@ -67,20 +67,20 @@ public class ThongBao extends Model<ThongBao> {
 	}
 
 	@ManyToOne
-	public NhanVien getNguoiGui() {
+	public NguoiDung getNguoiGui() {
 		return nguoiGui;
 	}
 
-	public void setNguoiGui(NhanVien nguoiGui) {
+	public void setNguoiGui(NguoiDung nguoiGui) {
 		this.nguoiGui = nguoiGui;
 	}
 
 	@ManyToOne
-	public NhanVien getNguoiNhan() {
+	public NguoiDung getNguoiNhan() {
 		return nguoiNhan;
 	}
 
-	public void setNguoiNhan(NhanVien nguoiNhan) {
+	public void setNguoiNhan(NguoiDung nguoiNhan) {
 		this.nguoiNhan = nguoiNhan;
 	}
 

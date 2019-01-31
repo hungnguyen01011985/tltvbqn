@@ -36,13 +36,10 @@ import com.querydsl.jpa.impl.JPAQuery;
 
 import vn.greenglobal.core.CoreObject;
 import vn.toancauxanh.cms.service.HomeService;
-import vn.toancauxanh.gg.model.enums.GiaiDoanXucTien;
 import vn.toancauxanh.gg.model.enums.LoaiCongViec;
-import vn.toancauxanh.gg.model.enums.LoaiVaiTro;
 import vn.toancauxanh.gg.model.enums.TrangThaiGiaoViec;
-import vn.toancauxanh.gg.model.enums.TrangThaiTiepDoanEnum;
-import vn.toancauxanh.model.NhanVien;
-import vn.toancauxanh.model.QNhanVien;
+import vn.toancauxanh.model.NguoiDung;
+import vn.toancauxanh.model.QNguoiDung;
 import vn.toancauxanh.model.Setting;
 import vn.toancauxanh.sso.Utils;
 
@@ -85,23 +82,23 @@ public class BaseObject<T> extends CoreObject<T> {
 		return arg;
 	}
 
-	public NhanVien fetchNhanVien(boolean saving) {
+	public NguoiDung fetchNguoiDung(boolean saving) {
 		if (Executions.getCurrent() == null) {
 			return null;
 		}
-		return getNhanVien(saving, (HttpServletRequest) Executions.getCurrent().getNativeRequest(),
+		return getNguoiDung(saving, (HttpServletRequest) Executions.getCurrent().getNativeRequest(),
 				(HttpServletResponse) Executions.getCurrent().getNativeResponse());
 	}
 
-	public NhanVien getNhanVien() {
-		return fetchNhanVien(false);
+	public NguoiDung getNguoiDung() {
+		return fetchNguoiDung(false);
 	}
 
-	public NhanVien getNhanVien(boolean isSave, HttpServletRequest req, HttpServletResponse res) {
-		NhanVien nhanVien = null;
-		String key = getClass() + "." + NhanVien.class;
-		nhanVien = (NhanVien) req.getAttribute(key);
-		if (nhanVien == null || nhanVien.noId()) {
+	public NguoiDung getNguoiDung(boolean isSave, HttpServletRequest req, HttpServletResponse res) {
+		NguoiDung nguoiDung = null;
+		String key = getClass() + "." + NguoiDung.class;
+		nguoiDung = (NguoiDung) req.getAttribute(key);
+		if (nguoiDung== null || nguoiDung.noId()) {
 			Object token = null;
 			Cookie[] cookies = req.getCookies();
 			if (cookies != null) {
@@ -118,28 +115,28 @@ public class BaseObject<T> extends CoreObject<T> {
 			}
 			if (token != null) {
 				String[] parts = new String(Base64.decodeBase64(token.toString())).split(":");
-				NhanVien nhanVienLogin = em().find(NhanVien.class, NumberUtils.toLong(parts[0], 0));
-				if (parts.length == 3 && nhanVienLogin != null) {
+				NguoiDung nguoiDungLogin = em().find(NguoiDung.class, NumberUtils.toLong(parts[0], 0));
+				if (parts.length == 3 && nguoiDungLogin != null) {
 					long expire = NumberUtils.toLong(parts[1], 0);
-					if (expire > System.currentTimeMillis() && token.equals(nhanVienLogin.getCookieToken(expire))) {
-						nhanVien = nhanVienLogin;
+					if (expire > System.currentTimeMillis() && token.equals(nguoiDungLogin.getCookieToken(expire))) {
+						nguoiDung = nguoiDungLogin;
 					}
 				}
 			}
-			if (!isSave && (nhanVien == null)) {
-				if (nhanVien == null) {
+			if (!isSave && (nguoiDung == null)) {
+				if (nguoiDung == null) {
 					bootstrapNhanVien();
 				}
-				nhanVien = new NhanVien();
+				nguoiDung = new NguoiDung();
 				if (token != null) {
 					req.getSession().removeAttribute("email");
 				}
 				redirectLogin(req, res);
 			}
-			req.setAttribute(key, nhanVien);
+			req.setAttribute(key, nguoiDung);
 		}
 
-		return isSave && nhanVien != null && nhanVien.noId() ? null : nhanVien;
+		return isSave && nguoiDung != null && nguoiDung.noId() ? null : nguoiDung;
 	}
 
 	public void setActivePage(int value) {
@@ -211,8 +208,8 @@ public class BaseObject<T> extends CoreObject<T> {
 		return new HomeService();
 	}
 
-	public NhanVien fetchNhanVienSaving() {
-		return fetchNhanVien(true);
+	public NguoiDung fetchNhanVienSaving() {
+		return fetchNguoiDung(true);
 	}
 
 	public void redirectLogin(HttpServletRequest req, HttpServletResponse res) {
@@ -235,13 +232,13 @@ public class BaseObject<T> extends CoreObject<T> {
 	}
 
 	public void bootstrapNhanVien() {
-		JPAQuery<NhanVien> q = find(NhanVien.class).where(QNhanVien.nhanVien.daXoa.isFalse())
-				.where(QNhanVien.nhanVien.trangThai.eq(core().TT_AP_DUNG));
+		JPAQuery<NguoiDung> q = find(NguoiDung.class).where(QNguoiDung.nguoiDung.daXoa.isFalse())
+				.where(QNguoiDung.nguoiDung.trangThai.eq(core().TT_AP_DUNG));
 		if (q.fetchCount() == 0) {
-			final NhanVien nhanVien = new NhanVien("admin@greenglobal.vn", "Super Admin");
-			nhanVien.getQuyens().add("*");
-			nhanVien.updatePassword("tcx@123");
-			nhanVien.saveNotShowNotification();
+			final NguoiDung nguoiDung = new NguoiDung("admin@greenglobal.vn", "Super Admin");
+			nguoiDung.getQuyens().add("*");
+			nguoiDung.updatePassword("tcx@123");
+			nguoiDung.saveNotShowNotification();
 		}
 	}
 
@@ -262,12 +259,12 @@ public class BaseObject<T> extends CoreObject<T> {
 
 	@Transient
 	public boolean isNhanVienDaKhoa() {
-		return !getNhanVien().isCheckApDung();
+		return !getNguoiDung().isCheckApDung();
 	}
 
 	@Transient
 	public boolean isNhanVienDaKichHoat() {
-		return !getNhanVien().isCheckKichHoat();
+		return !getNguoiDung().isCheckKichHoat();
 	}
 
 	@Command
@@ -522,305 +519,6 @@ public class BaseObject<T> extends CoreObject<T> {
 		Executions.createComponents("/frontend/common/notification-error.zul", null, args);
 	}
 
-	@Transient
-	public List<String> getListQuocGia() {
-		List<String> list = new ArrayList<String>();
-		list.add("Afghanistan");
-		list.add("Ai Cập");
-		list.add("Albania");
-		list.add("Algérie");
-		list.add("Andorra");
-		list.add("Angola");
-		list.add("Vương quốc Liên hiệp Anh và Bắc Ireland");
-		list.add("Antigua và Barbuda");
-		list.add("Áo");
-		list.add("Ả Rập Xê Út");
-		list.add("Armenia");
-		list.add("Argentina");
-		list.add("Azerbaijan");
-		list.add("Ấn Độ");
-		list.add("Bahamas");
-		list.add("Bahrain");
-		list.add("Ba Lan");
-		list.add("Bangladesh");
-		list.add("Barbados");
-		list.add("Belarus");
-		list.add("Belize");
-		list.add("Bénin");
-		list.add("Bhutan");
-		list.add("Bỉ");
-		list.add("Bolivia");
-		list.add("Bosna và Hercegovina");
-		list.add("Botswana");
-		list.add("Bồ Đào Nha");
-		list.add("Bờ Biển Ngà");
-		list.add("Brasil");
-		list.add("Brunei");
-		list.add("Bulgaria");
-		list.add("Burkina Faso");
-		list.add("Burundi");
-		list.add("Cabo Verde");
-		list.add("UAE");
-		list.add("Cameroon");
-		list.add("Campuchia");
-		list.add("Canada");
-		list.add("Chile");
-		list.add("Colombia");
-		list.add("Comoros");
-		list.add("Cộng hòa Congo");
-		list.add("Cộng hòa Dân chủ Congo");
-		list.add("Costa Rica");
-		list.add("Croatia");
-		list.add("Cuba");
-		list.add("Djibouti");
-		list.add("Dominica");
-		list.add("Cộng hòa Dominica");
-		list.add("Đan Mạch");
-		list.add("Đông Timor");
-		list.add("Đức");
-		list.add("Ecuador");
-		list.add("El Salvador");
-		list.add("Eritrea");
-		list.add("Estonia");
-		list.add("Fiji");
-		list.add("Gabon");
-		list.add("Gambia");
-		list.add("Ghana");
-		list.add("Grenada");
-		list.add("Gruzia");
-		list.add("Guatemala");
-		list.add("Guiné-Bissau");
-		list.add("Guinea Xích Đạo");
-		list.add("Guinée");
-		list.add("Guyana");
-		list.add("Haiti");
-		list.add("Hà Lan");
-		list.add("Hàn Quốc");
-		list.add("Hoa Kỳ");
-		list.add("Honduras");
-		list.add("Hungary");
-		list.add("Hy Lạp");
-		list.add("Iceland");
-		list.add("Indonesia");
-		list.add("Iran");
-		list.add("Iraq");
-		list.add("Ireland");
-		list.add("Israel");
-		list.add("Jamaica");
-		list.add("Jordan");
-		list.add("Kazakhstan");
-		list.add("Kenya");
-		list.add("Kiribati");
-		list.add("Kosovo");
-		list.add("Kuwait");
-		list.add("Kyrgyzstan");
-		list.add("Lào");
-		list.add("Latvia");
-		list.add("Lesotho");
-		list.add("Liban");
-		list.add("Liberia");
-		list.add("Libya");
-		list.add("Liechtenstein");
-		list.add("Litva");
-		list.add("Luxembourg");
-		list.add("Macedonia");
-		list.add("Madagascar");
-		list.add("Malawi");
-		list.add("Malaysia");
-		list.add("Maldives");
-		list.add("Mali");
-		list.add("Malta");
-		list.add("Maroc");
-		list.add("Quần đảo Marshall");
-		list.add("Mauritanie");
-		list.add("Mauritius");
-		list.add("México");
-		list.add("Micronesia");
-		list.add("Moldova");
-		list.add("Monaco");
-		list.add("Mông Cổ");
-		list.add("Montenegro");
-		list.add("Mozambique");
-		list.add("Myanmar");
-		list.add("Namibia");
-		list.add("Nam Sudan");
-		list.add("Nam Phi");
-		list.add("Nauru");
-		list.add("Na Uy");
-		list.add("Nepal");
-		list.add("New Zealand");
-		list.add("Nicaragua");
-		list.add("Niger");
-		list.add("Nigeria");
-		list.add("Nga");
-		list.add("Nhật Bản");
-		list.add("Oman");
-		list.add("Pakistan");
-		list.add("Palau");
-		list.add("Palestine");
-		list.add("Panama");
-		list.add("Papua New Guinea");
-		list.add("Paraguay");
-		list.add("Peru");
-		list.add("Pháp");
-		list.add("Phần Lan");
-		list.add("Philippines");
-		list.add("Qatar");
-		list.add("România");
-		list.add("Rwanda");
-		list.add("Saint Kitts và Nevis");
-		list.add("Saint Lucia");
-		list.add("Saint Vincent và Grenadines");
-		list.add("Samoa");
-		list.add("San Marino");
-		list.add("São Tomé và Príncipe");
-		list.add("Séc");
-		list.add("Sénégal");
-		list.add("Serbia");
-		list.add("Seychelles");
-		list.add("Sierra Leone");
-		list.add("Singapore");
-		list.add("Síp");
-		list.add("Slovakia");
-		list.add("Slovenia");
-		list.add("Solomon");
-		list.add("Somalia");
-		list.add("Sri Lanka");
-		list.add("Sudan");
-		list.add("Suriname");
-		list.add("Swaziland");
-		list.add("Syria");
-		list.add("Tajikistan");
-		list.add("Tây Ban Nha");
-		list.add("Tchad");
-		list.add("Thái Lan");
-		list.add("Thổ Nhĩ Kỳ");
-		list.add("Thụy Điển");
-		list.add("Thụy Sĩ");
-		list.add("Togo");
-		list.add("Tonga");
-		list.add("Triều Tiên");
-		list.add("Trinidad và Tobago");
-		list.add("Trung Quốc");
-		list.add("Trung Phi");
-		list.add("Tunisia");
-		list.add("Turkmenistan");
-		list.add("Tuvalu");
-		list.add("Úc");
-		list.add("Uganda");
-		list.add("Ukraina");
-		list.add("Uruguay");
-		list.add("Uzbekistan");
-		list.add("Vanuatu");
-		list.add("Vatican");
-		list.add("Venezuela");
-		list.add("Việt Nam");
-		list.add("Ý");
-		list.add("Yemen");
-		list.add("Zambia");
-		list.add("Zimbabwe");
-
-		return list;
-	}
-
-	@Transient
-	public List<String> getListQuocGiaAndNull() {
-		List<String> list = new ArrayList<String>();
-		list.add(null);
-		list.addAll(getListQuocGia());
-		return list;
-	}
-
-	@Transient
-	public List<NhanVien> getListNguoiPhuTrachDoanVaoAndNull() {
-		List<NhanVien> list = new ArrayList<NhanVien>();
-		list.add(new NhanVien());
-		list.addAll(getListNguoiPhuTrach());
-		return list;
-	}
-
-	@Transient
-	public List<NhanVien> getListNguoiPhuTrach() {
-		List<NhanVien> list = new ArrayList<NhanVien>();
-		JPAQuery<NhanVien> q = find(NhanVien.class)
-				.where(QNhanVien.nhanVien.vaiTros.any().loaiVaiTro.eq(LoaiVaiTro.VAI_TRO_CHUYEN_VIEN)
-						.or(QNhanVien.nhanVien.vaiTros.any().loaiVaiTro.eq(LoaiVaiTro.VAI_TRO_TRUONG_PHONG)));
-		if (q != null) {
-			list.addAll(q.fetch());
-			return list;
-		}
-		return list;
-	}
-
-	public boolean checkEdit(Long idNV, String id, GiaiDoanXucTien giaiDoanXucTien, NhanVien nguoiTao,
-			NhanVien nguoiPhuTrach) {
-		if (id == null || idNV == null || id.trim().isEmpty()) {
-			return false;
-		}
-		if (GiaiDoanXucTien.CHUA_HOAN_THANH.equals(giaiDoanXucTien)
-				|| GiaiDoanXucTien.HOAN_THANH.equals(giaiDoanXucTien)) {
-			return false;
-		}
-		if (nguoiTao.equals(core().getNhanVien()) || nguoiPhuTrach.equals(core().getNhanVien())) {
-			return true;
-		}
-		return id.contains("@" + String.valueOf(idNV) + "@");
-	}
-
-	public boolean checkNguoiLienQuan(Long idNV, String id, NhanVien nguoiTao, NhanVien nguoiPhuTrach) {
-		if (idNV == null) {
-			return false;
-		}
-		if (nguoiTao.equals(core().getNhanVien()) || nguoiPhuTrach.equals(core().getNhanVien())) {
-			return true;
-		}
-		if (id != null && !"".equals(id)) {
-			return listSubStringId(id).contains(idNV);
-		}
-		return false;
-	}
-
-	public boolean checkNguoiPhuTrach(NhanVien nguoiTao, NhanVien nguoiPhuTrach, Long idNV) {
-		if (idNV == null) {
-			return false;
-		}
-		if ((nguoiTao != null && nguoiTao.equals(core().getNhanVien()))
-				|| (nguoiPhuTrach != null && nguoiPhuTrach.equals(core().getNhanVien()))) {
-			return true;
-		}
-		return false;
-	}
-
-	public boolean checkOnlyNguoiPhuTrach(NhanVien nguoiPhuTrach, NhanVien nguoiTao, Long idNV) {
-		if (idNV == null) {
-			return false;
-		}
-		if (nguoiPhuTrach != null && nguoiPhuTrach.equals(core().getNhanVien()) && !nguoiPhuTrach.equals(nguoiTao)) {
-			return true;
-		}
-		return false;
-	}
-
-	public boolean checkOnlyNguoiLienQuan(Long idNV, String id) {
-		if (idNV == null) {
-			return false;
-		}
-		if (id != null && !id.isEmpty()) {
-			return listSubStringId(id).contains(idNV);
-		}
-		return false;
-	}
-
-	public boolean checkDeleteDoanVao(NhanVien nguoiTao, TrangThaiTiepDoanEnum trangThaiTiepDoan) {
-		if (TrangThaiTiepDoanEnum.DA_TIEP.equals(trangThaiTiepDoan)) {
-			return false;
-		}
-		if (nguoiTao.equals(core().getNhanVien())) {
-			return true;
-		}
-		return false;
-	}
-
 	@Override
 	public String subString(String text, int size) {
 		int l = text.length();
@@ -832,55 +530,15 @@ public class BaseObject<T> extends CoreObject<T> {
 		return text.substring(0, index) + tail;
 	}
 
-	public List<NhanVien> getListNguoiPhuTrachAndNull() {
-		List<NhanVien> list = new ArrayList<NhanVien>();
-		list.add(null);
-		JPAQuery<NhanVien> q = find(NhanVien.class).where(QNhanVien.nhanVien.phongBan.id.eq(1l))
-				.where(QNhanVien.nhanVien.vaiTros.any().loaiVaiTro.eq(LoaiVaiTro.VAI_TRO_CHUYEN_VIEN)
-						.or(QNhanVien.nhanVien.vaiTros.any().loaiVaiTro.eq(LoaiVaiTro.VAI_TRO_TRUONG_PHONG)));
-		if (q != null) {
-			list.addAll(q.fetch());
-			return list;
-		}
-		return list;
-	}
-
-	public List<GiaiDoanXucTien> getListGiaiDoanXucTienAndNull() {
-		List<GiaiDoanXucTien> list = new ArrayList<>();
-		list.add(null);
-		list.add(GiaiDoanXucTien.GIAI_DOAN_MOT);
-		list.add(GiaiDoanXucTien.GIAI_DOAN_HAI);
-		list.add(GiaiDoanXucTien.GIAI_DOAN_BA);
-		list.add(GiaiDoanXucTien.GIAI_DOAN_BON);
-		list.add(GiaiDoanXucTien.GIAI_DOAN_NAM);
-		list.add(GiaiDoanXucTien.CHUA_HOAN_THANH);
-		list.add(GiaiDoanXucTien.HOAN_THANH);
-		return list;
-	}
-
-	public boolean checkQuyenBaoCao(TrangThaiGiaoViec trangThai, Long id) {
-		if (TrangThaiGiaoViec.DANG_LAM.equals(trangThai) && core().getNhanVien().getId().equals(id)) {
-			return true;
-		}
-		return false;
-	}
-
-	public boolean checkQuyenNhanViec(TrangThaiGiaoViec trangThai, Long id) {
-		if (TrangThaiGiaoViec.CHUA_LAM.equals(trangThai) && core().getNhanVien().getId().equals(id)) {
-			return true;
-		}
-		return false;
-	}
-
 	public boolean checkQuyenSuaXoa(TrangThaiGiaoViec trangThai, Long id) {
-		if (!TrangThaiGiaoViec.HOAN_THANH.equals(trangThai) && core().getNhanVien().getId().equals(id)) {
+		if (!TrangThaiGiaoViec.HOAN_THANH.equals(trangThai) && core().getNguoiDung().getId().equals(id)) {
 			return true;
 		}
 		return false;
 	}
 
 	public boolean checkQuyenSuaXoaKeCongViec(Long id) {
-		if (core().getNhanVien().getId().equals(id)) {
+		if (core().getNguoiDung().getId().equals(id)) {
 			return true;
 		}
 		return false;
@@ -901,26 +559,6 @@ public class BaseObject<T> extends CoreObject<T> {
 		} else {
 			return "<span class='color-txt-red'>(Đã quá hạn)</span>";
 		}
-	}
-
-	public List<NhanVien> getListNhanVienTruongPhongAndLanhDaoAndNull() {
-		List<NhanVien> list = new ArrayList<NhanVien>();
-		list.add(null);
-		JPAQuery<NhanVien> q = find(NhanVien.class)
-				.where(QNhanVien.nhanVien.vaiTro.loaiVaiTro.eq(LoaiVaiTro.VAI_TRO_TRUONG_PHONG)
-						.or(QNhanVien.nhanVien.vaiTro.loaiVaiTro.eq(LoaiVaiTro.VAI_TRO_LANH_DAO)));
-		list.addAll(q.fetch());
-		return list;
-	}
-
-	public List<NhanVien> getListNhanVienTruongPhongAndChuyenVienNull() {
-		List<NhanVien> list = new ArrayList<NhanVien>();
-		list.add(null);
-		JPAQuery<NhanVien> q = find(NhanVien.class)
-				.where(QNhanVien.nhanVien.vaiTro.loaiVaiTro.eq(LoaiVaiTro.VAI_TRO_TRUONG_PHONG)
-						.or(QNhanVien.nhanVien.vaiTro.loaiVaiTro.eq(LoaiVaiTro.VAI_TRO_CHUYEN_VIEN)));
-		list.addAll(q.fetch());
-		return list;
 	}
 
 	public List<LoaiCongViec> getListLoaiCongViec() {

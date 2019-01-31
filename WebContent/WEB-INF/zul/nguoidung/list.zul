@@ -1,6 +1,6 @@
 <?page title="Quản lý người dùng" contentType="text/html;charset=UTF-8"?>
 <window xmlns:zk="zk" xmlns:n="native" xmlns:x="xhtml" apply="org.zkoss.bind.BindComposer"
-	viewModel="@id('vm') @init('vn.toancauxanh.service.NhanVienService')"
+	viewModel="@id('vm') @init('vn.toancauxanh.service.NguoiDungService')"
 	class="form-list">
 	<style>
 		.z-combobox-content {

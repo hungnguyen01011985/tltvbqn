@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.querydsl.jpa.impl.JPAQuery;
 
-import vn.toancauxanh.model.NhanVien;
-import vn.toancauxanh.model.QNhanVien;
+import vn.toancauxanh.model.NguoiDung;
+import vn.toancauxanh.model.QNguoiDung;
 import vn.toancauxanh.service.BasicService;
 
 @Controller
-public class CasController extends BasicService<NhanVien>{
+public class CasController extends BasicService<NguoiDung>{
 
 	@RequestMapping("/cas/login")
 	public String login(HttpServletRequest request, HttpServletResponse response) {
@@ -31,9 +31,9 @@ public class CasController extends BasicService<NhanVien>{
 		if (auth != null) {
 			Pac4jAuthenticationToken pac4j = (Pac4jAuthenticationToken) auth;
 			String username = pac4j.getName();
-			NhanVien nhanVien = new JPAQuery<NhanVien>(em()).from(QNhanVien.nhanVien)
-					.where(QNhanVien.nhanVien.daXoa.isFalse()).where(QNhanVien.nhanVien.trangThai.ne(core().TT_DA_XOA))
-					.where(QNhanVien.nhanVien.email.eq(username.trim())).fetchFirst();
+			NguoiDung nhanVien = new JPAQuery<NguoiDung>(em()).from(QNguoiDung.nguoiDung)
+					.where(QNguoiDung.nguoiDung.daXoa.isFalse()).where(QNguoiDung.nguoiDung.trangThai.ne(core().TT_DA_XOA))
+					.where(QNguoiDung.nguoiDung.email.eq(username.trim())).fetchFirst();
 			
 			if (nhanVien != null) {
 				String cookieToken = nhanVien

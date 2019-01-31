@@ -2,7 +2,7 @@
 <zk xmlns:n="native" xmlns:zk="zk" xmlns:x="xhtml" xmlns:u="zul" xmlns:w="client">
 	<zk:zscript><![CDATA[
 		entry = new vn.toancauxanh.service.BaseObject().core();
-		nhanVien = entry.nhanVien;
+		nguoiDung = entry.nguoiDung;
 		import java.awt.image.*;
 		BufferedImage image = new BufferedImage(400, 300, BufferedImage.TYPE_INT_ARGB);
 	]]></zk:zscript>	
@@ -54,7 +54,7 @@
 		<div style="display:flex;">
 			<include instant="true" src="/WEB-INF/zul/common/thongbao.zul" style="z-index:1799;"/>
 			
-			<div viewModel="@id('vm') @init(nhanVien)">
+			<div viewModel="@id('vm') @init(nguoiDung)">
 				<n:ul class="nav box-user-fm">
 					<n:li class="dropdown pd-header-avarta" style="display: inline-block">
 						<n:a class="dropdown-toggle box-header-users" href="#">

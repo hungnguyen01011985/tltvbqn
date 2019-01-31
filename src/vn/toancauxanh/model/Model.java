@@ -39,9 +39,9 @@ import vn.toancauxanh.service.BaseObject;
 public class Model<T extends Model<T>> extends BaseObject<T> {
 	// private static final long serialVersionUID = 4219024869115773046L;
 
-	private NhanVien nguoiSua;
+	private NguoiDung nguoiSua;
 
-	private NhanVien nguoiTao;
+	private NguoiDung nguoiTao;
 
 	private String trangThai = core() == null ? "ap_dung" : core().TT_AP_DUNG;
 
@@ -91,13 +91,13 @@ public class Model<T extends Model<T>> extends BaseObject<T> {
 
 	@Transient
 	public boolean isCoQuyenChinhSua() {
-		return core().getNhanVien().equals(nguoiTao);
+		return core().getNguoiDung().equals(nguoiTao);
 	}
 
 	@Override
 	public void doSave() {
 		setNgaySua(new Date());
-		setNguoiSua(core().fetchNhanVien(true));
+		setNguoiSua(core().fetchNguoiDung(true));
 		if (noId()) {
 			setNgayTao(getNgaySua());
 			setNguoiTao(getNguoiSua());
@@ -139,7 +139,7 @@ public class Model<T extends Model<T>> extends BaseObject<T> {
 	public void notifyNguoiLienQuan(String idNguoiLienQuan, String tenNhiemVu) {
 		listSubStringId(idNguoiLienQuan).stream().distinct().forEach(item -> {
 			ThongBao thongBao = new ThongBao();
-			NhanVien nV = new NhanVien();
+			NguoiDung nV = new NguoiDung();
 			nV.setId(item);
 			thongBao.setNguoiNhan(nV);
 			thongBao.setLoaiThongBao(LoaiThongBao.HUY_CONG_VIEC);
@@ -179,21 +179,21 @@ public class Model<T extends Model<T>> extends BaseObject<T> {
 
 	@QueryInit("*.*.*.*")
 	@ManyToOne
-	public NhanVien getNguoiSua() {
+	public NguoiDung getNguoiSua() {
 		return nguoiSua;
 	}
 
 	@QueryInit("*.*.*.*")
 	@ManyToOne
-	public NhanVien getNguoiTao() {
+	public NguoiDung getNguoiTao() {
 		return nguoiTao;
 	}
 
 	@Transient
-	public NhanVien getOrNewNguoiTao() {
-		NhanVien result = nguoiTao;
+	public NguoiDung getOrNewNguoiTao() {
+		NguoiDung result = nguoiTao;
 		if (result == null) {
-			result = new NhanVien();
+			result = new NguoiDung();
 		}
 		return result;
 	}
@@ -290,11 +290,11 @@ public class Model<T extends Model<T>> extends BaseObject<T> {
 		}
 	}
 
-	public void setNguoiSua(final NhanVien _nguoiSua) {
+	public void setNguoiSua(final NguoiDung _nguoiSua) {
 		nguoiSua = _nguoiSua;
 	}
 
-	public void setNguoiTao(final NhanVien _nguoiTao) {
+	public void setNguoiTao(final NguoiDung _nguoiTao) {
 		nguoiTao = _nguoiTao;
 	}
 

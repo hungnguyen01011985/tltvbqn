@@ -30,9 +30,9 @@ public class QModel extends EntityPathBase<Model<?>> {
 
     public final DateTimePath<java.util.Date> ngayTao = createDateTime("ngayTao", java.util.Date.class);
 
-    public final QNhanVien nguoiSua;
+    public final QNguoiDung nguoiSua;
 
-    public final QNhanVien nguoiTao;
+    public final QNguoiDung nguoiTao;
 
     public final StringPath trangThai = createString("trangThai");
 
@@ -57,8 +57,8 @@ public class QModel extends EntityPathBase<Model<?>> {
 
     public QModel(Class<? extends Model<?>> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.nguoiSua = inits.isInitialized("nguoiSua") ? new QNhanVien(forProperty("nguoiSua"), inits.get("nguoiSua")) : null;
-        this.nguoiTao = inits.isInitialized("nguoiTao") ? new QNhanVien(forProperty("nguoiTao"), inits.get("nguoiTao")) : null;
+        this.nguoiSua = inits.isInitialized("nguoiSua") ? new QNguoiDung(forProperty("nguoiSua"), inits.get("nguoiSua")) : null;
+        this.nguoiTao = inits.isInitialized("nguoiTao") ? new QNguoiDung(forProperty("nguoiTao"), inits.get("nguoiTao")) : null;
     }
 
 }

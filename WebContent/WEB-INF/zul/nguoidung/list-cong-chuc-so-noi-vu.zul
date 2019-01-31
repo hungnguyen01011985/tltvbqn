@@ -4,7 +4,7 @@
 		closable="true" viewModel="@id('vm') @init('vn.toancauxanh.service.CongChucSoNoiVuService')">
 
 		<zscript><![CDATA[
-			nhanVien = arg.get("vm");
+			nguoiDung = arg.get("vm");
 		]]></zscript> 
 
 		<div class="w-popup-content-medium">

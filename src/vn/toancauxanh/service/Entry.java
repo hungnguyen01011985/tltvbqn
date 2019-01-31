@@ -168,7 +168,7 @@ public class Entry extends BaseObject<Object> {
 
 	@RequestMapping(value = "/login")
 	public String login(HttpServletRequest request, HttpServletResponse response) {
-		if (getNhanVien(true, request, response) != null) {
+		if (getNguoiDung(true, request, response) != null) {
 			return "forward:/WEB-INF/zul/home.zul?resource=quanlygiaoviec&action=lietke&file=/WEB-INF/zul/quanlygiaoviec/list.zul";
 		}
 		return "forward:/WEB-INF/zul/login.zul";
@@ -238,7 +238,7 @@ public class Entry extends BaseObject<Object> {
 		if (auth == null) {
 			response.sendRedirect(request.getContextPath()+"/cas/login");
 		} else {
-			new NhanVienService().logoutNotRedirect(request, response);
+			new NguoiDungService().logoutNotRedirect(request, response);
 		}	
 	}
 
@@ -246,8 +246,8 @@ public class Entry extends BaseObject<Object> {
 		return new PhongBanService();
 	}
 
-	public final NhanVienService getNhanViens() {
-		return new NhanVienService();
+	public final NguoiDungService getNhanViens() {
+		return new NguoiDungService();
 	}
 
 	public final VaiTroService getVaiTros() {
@@ -255,7 +255,7 @@ public class Entry extends BaseObject<Object> {
 	}
 
 	public final Quyen getQuyen() {
-		return getNhanVien().getTatCaQuyen();
+		return getNguoiDung().getTatCaQuyen();
 	}
 
 	public final HomeService getHomes() {
@@ -271,7 +271,7 @@ public class Entry extends BaseObject<Object> {
 			return false;
 		}
 		boolean rs = false;
-		for (VaiTro vt : getNhanVien().getVaiTros()) {
+		for (VaiTro vt : getNguoiDung().getVaiTros()) {
 			if (vaiTro.equals(vt.getAlias())) {
 				rs = true;
 				break;

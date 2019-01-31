@@ -1,0 +1,222 @@
+<window id="wdn" border="normal" xmlns:n="native" xmlns:x="xhtml" xmlns:zk="zk" xmlns:w="client" class="content-popup"
+		viewModel="@id('vm') @init(arg.model)" validationMessages="@id('vmsgs')" mode="modal"
+		form="@id('fx') @load(vm) @save(vm, before={'saveNhanVien'}) @validator(vm.getValidator())"
+		width="1000px"
+		closable="true">
+	<style>
+		.z-page {
+			    background: #f4f5f7;
+		}
+		 .z-window-content {
+			border: 1px solid #E0E2E6;
+		 }
+	</style>
+	<zscript><![CDATA[
+		vmArgs = arg.get("vmArgs");
+		strSave = arg.get("save");
+		readOnly = arg.get("readOnly") == null ? false : arg.get("readOnly");
+		import java.awt.image.*;
+		BufferedImage imageNull = new BufferedImage(400, 300, BufferedImage.TYPE_INT_ARGB);
+		model2 = arg.get("model2");
+	]]></zscript>
+	<div class="panel-list form-trogiup mo-windown">
+			<div zclass="row">
+				<div zclass="col-md-12">
+					<x:span class="label-txt-style">Xin chào ${entry.nhanVien.hoVaTen}</x:span>
+					<n:h3 class="page-header">
+						Quản lý thông tin tài khoản
+					</n:h3>
+				</div>
+			</div>
+	</div>
+		<div class="w-popup-user">
+			<div class="mg-and-bg-and-line flex" style="padding:15px;">
+				<div class="col-md-8">
+					<div class="row">
+						<div zclass="col-md-6">
+							<div zclass="form-group">
+								<div class="flex">
+									<x:span class="label-txt-style">Họ và tên<n:small class="required" if="${!readOnly}"> *</n:small></x:span>
+								</div> 
+								<textbox class="form-control textbox-txt-style" readonly="${readOnly}" value="@bind(vm.hoVaTen)@save(vm.hoVaTen, before='saveNhanVien') @validator('vn.toancauxanh.vm.BaseValid', constraint='no empty')"
+									onFocus="self.select()" onBlur="self.setValue(self.getValue().trim())" placeholder="Nhập tên người dùng..."></textbox>
+								<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+							</div>
+						</div>
+						<div zclass="col-md-6" >
+							<div zclass="form-group">
+								<div class="flex">
+									<x:span class="label-txt-style">Vai trò người dùng<n:small class="required" if="${!readOnly}"> *</n:small></x:span>
+								</div>
+								<combobox width="100%" class="his" readonly="true" disabled="${readOnly}"
+									model="@load(entry.vaiTros.vaiTroQuery.fetch())" placeholder="-Chọn-"
+									selectedItem="@bind(vm.vaiTro) @save(vm.vaiTro, before='saveNhanVien') @validator(vm.validateVaiTro)">
+									<template name="model">
+										<comboitem label="@load(each.tenVaiTro)" />
+									</template>
+								</combobox>
+								<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div zclass="col-md-6">
+							<div zclass="form-group">
+								<div class="flex">
+									<x:span class="label-txt-style">Phòng ban<n:small class="required" if="${!readOnly}"> *</n:small></x:span>
+								</div> 
+								<combobox readonly="true" disabled="${readOnly}" model="@load(entry.phongBans.targetQuery.fetch())"
+									selectedItem="@bind(vm.phongBan) @save(vm.phongBan, before='saveNhanVien') @validator(vm.validatePhongBan)" class="his" placeholder="Chọn phòng ban" width="100%">
+									<template name="model">
+										<comboitem label="@load(each.ten)" />
+									</template>
+								</combobox>
+								<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+							</div>
+						</div>
+						<div zclass="col-md-6">
+							<div zclass="form-group">
+								<x:span class="label-txt-style">Số điện thoại</x:span>
+								<textbox class="form-control textbox-txt-style" readonly="${readOnly}"
+									width="100%" maxlength="11"
+									value="@bind(vm.soDienThoai) @save(vm.soDienThoai, before={'saveNhanVien'}) @validator(vm.validateSoDienThoai)" 
+									onFocus="self.select()" onBlur="self.setValue(self.getValue().trim())" >
+								</textbox>
+								<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div zclass="col-md-12">
+							<div zclass="form-group">
+								<div class="flex">
+									<x:span class="label-txt-style">Địa chỉ email<n:small class="required" if="${!readOnly}"> *</n:small></x:span>
+								</div>
+								<textbox class="form-control textbox-txt-style" readonly="${readOnly}"
+									width="100%" maxlength="255"
+									value="@bind(vm.email) @save(vm.email, before={'saveNhanVien'}) @validator(vm.validatorEmail)"
+									onFocus="self.select()" onBlur="self.setValue(self.getValue().trim())"/>
+								<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+							</div>
+							
+						</div>
+					</div>
+					<div class="row">
+						<div zclass="col-md-12" if="${!readOnly and !vm.noId()}">
+							<div zclass="form-group">
+								<div class="checkbox checkbox-primary">
+									<checkbox class="ck-box" checked="@bind(vm.changePass)" />Đổi mật khẩu
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div if="${vm.noId()}">
+							<div zclass="col-md-6">
+								<div zclass="form-group">
+									<div class="flex">
+										<x:span class="label-txt-style">Mật khẩu<n:small class="required" if="${!readOnly}"> *</n:small></x:span>
+									</div>
+									<textbox class="form-control" readonly="${readOnly}"
+										width="100%" type="password" 
+										value="@bind(vm.matKhauEdit) @save(vm.matKhauEdit, before='saveNhanVien') @validator('vn.toancauxanh.vm.BaseValid', constraint='no empty')" />
+									<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+								</div>
+							</div>
+							<div zclass="col-md-6">
+								<div zclass="form-group">
+									<div class="flex">
+										<x:span class="label-txt-style">Nhập lại mật khẩu<n:small class="required" if="${!readOnly}"> *</n:small></x:span>
+									</div>
+									<textbox class="form-control" readonly="${readOnly }"
+										width="100%" type="password"
+										value="@bind(vm.matKhau2) @save(vm.matKhau2, before='saveNhanVien') @validator('vn.toancauxanh.vm.BaseValid', constraint='no empty', password=vm.matKhauEdit)" />
+									<label zclass="error"
+										value="@load(vmsgs[self.previousSibling])" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div if="${!vm.noId()}">
+							<div zclass="col-md-4" if="${!(entry.nhanVien.quyens eq '[*]')}" visible="@load(vm.changePass)">
+								<div zclass="form-group">
+									<div class="flex">
+										<x:span class="label-txt-style">Mật khẩu cũ<n:small class="required" if="${!readOnly}"> *</n:small></x:span>
+									</div>
+									<textbox class="form-control" readonly="${readOnly}"
+										width="100%" type="password" value="@bind(vm.matKhauCu) @save(vm.matKhauCu, before='updateNhanVien') @validator(vm.validateMatKhauCu)"
+											onFocus="self.select()" onBlur="self.setValue(self.getValue().trim())" placeholder="Nhập mật khẩu cũ" />
+									<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+								</div>
+							</div>
+							<div zclass="col-md-4" visible="@load(vm.changePass)">
+								<div zclass="form-group">
+									<div class="flex">
+										<x:span class="label-txt-style">Mật khẩu mới<n:small class="required" if="${!readOnly}"> *</n:small></x:span>
+									</div>
+									<textbox class="form-control" readonly="${readOnly }"
+										width="100%" type="password" value="@bind(vm.matKhauUpdate) @save(vm.matKhauUpdate, before='updateNhanVien') @validator(vm.validateMatKhauMoiEdit)"
+											onFocus="self.select()" onBlur="self.setValue(self.getValue().trim())" placeholder="Nhập mật khẩu mới" />
+									<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+								</div>
+							</div>
+							<div zclass="col-md-4" visible="@load(vm.changePass)">
+								<div zclass="form-group">
+									<div class="flex">
+										<x:span class="label-txt-style">Nhập lại mật khẩu<n:small class="required" if="${!readOnly}"> *</n:small></x:span>
+									</div>
+									<textbox class="form-control" readonly="${readOnly }"
+										width="100%" type="password" value="@bind(vm.matKhauEdit) @save(vm.matKhauEdit, before='updateNhanVien') @validator(vm.validateMatKhauMoi, pass = vm.matKhauUpdate)"
+										onFocus="self.select()" onBlur="self.setValue(self.getValue().trim())" placeholder="Nhập lại mật khẩu" />
+									<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div style="text-align:center;">
+						<x:span class="label-txt-style">Ảnh đại diện</x:span>
+				    	<div class="form-group" style="margin-top: 5px;">
+				    		<div class="div-image custom-avatar">
+				    			<image visible="@load(vm.avatarImage ne null)" id="imageCmp" class="img-avarta-style"
+									content="@load(vm.avatarImage eq null ? imageNull : vm.avatarImage) @save(vm.avatarImage, before='saveNhanVien')">
+								</image>
+								<image class="img-avarta-style" visible="@load(vm.avatarImage eq null)" src="/assets/img/employeebig.png"></image>
+								<div if="${!readOnly}">
+									<x:button visible="@load(!empty vm.avatarImage)" zk:onClick="@command('deleteAvatarImage', vm=vm)"
+										type="button" class="close custom-remove" aria-label="Close">
+										<x:image class="img-edit" src="${contexPath}/assets/img/front/close.svg"/>
+									</x:button>
+									<div class="div-image-btn">
+										<button class="btn-upload-image-avarta" image="${contexPath}/assets/img/front/camera.svg" upload="true,maxsize=50000"
+										onUpload="@command('attachImages',media=event.media,vmsgs=vmsgs)"/>												
+									</div>	
+								</div>
+				    		</div>			
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<div class="mg-and-bg-and-line">
+				<div zclass="col-md-6">
+					<div zclass="form-group">
+						<x:button  class="btn bg-btn-dong btn-grey" zk:onClick="@command('close', wdn=wdn, vm = vm)">
+							<x:image class="img-title" src="${contexPath}/assets/icon-bxtdn/dong.svg"/>
+							<span>Đóng</span>
+						</x:button>
+					</div>
+				</div>
+				<div zclass="col-md-6">
+					<div zclass="form-group right">
+						<x:button  class="btn btn-blue mg-btn" if="${!readOnly and (!vm.noId() or vm.noId())}" zk:onClick="@command('updateNhanVien',wdn = wdn, vm = vm, vm2 = model2)">
+							<x:image class="img-title" src="${contexPath}/assets/icon-bxtdn/dieu-chinh.svg"/>
+							<span>Cập nhật</span>
+						</x:button>
+					</div>
+				</div>
+			</div>
+		</div>
+</window>

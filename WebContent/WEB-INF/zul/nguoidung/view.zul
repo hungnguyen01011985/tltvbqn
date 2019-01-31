@@ -1,0 +1,208 @@
+<idspace>
+	<window xmlns:n="native" xmlns:x="xhtml" xmlns:zk="zk" apply="org.zkoss.bind.BindComposer" class="content-popup"
+		id="wdn" border="normal" mode="modal" action="show: slideIn" contentStyle="overflow:auto;" closable="true"
+		onClose="@command('invokeGG', notify=vmArgs, detach=wdn, attr='targetQuery')" width="1000px"
+		whatever="@load(false,after='savePhongBan') @converter('vn.toancauxanh.service.DetachConverter')"
+		viewModel="@id('vm') @init(arg.model)" validationMessages="@id('vmsgs')">
+		<zscript><![CDATA[
+			vmArgs = arg.get("vmArgs");
+			strSave = arg.get("save");
+			strXem = arg.get("xem");
+			readOnly = arg.get("readOnly") == null ? false : arg.get("readOnly");
+			import java.awt.image.*;
+			BufferedImage imageNull = new BufferedImage(400, 300, BufferedImage.TYPE_INT_ARGB);
+		]]></zscript> 
+		<div class="w-popup-user">
+			<div class="box-title-and-close" style="padding:15px;">
+				<div style="display:flex">
+					<x:image class="img-popup-title" src="${contexPath}/assets/icon-bxtdn/tao-icon-popup.svg"/>
+					<span class="style-title-popup" if="${!readOnly}">${arg.save}</span>
+					<span class="style-title-popup" if="${readOnly}">${arg.xem}</span>
+				</div>
+				<a onClick="wdn.detach()">
+					<x:image class="img-title" src="${contexPath}/assets/icon-bxtdn/close-popup.svg"/>
+				</a>
+			</div>
+			<div class="mg-and-bg-and-line flex" style="padding:15px;">
+				<div class="col-md-8">
+					<div class="row">
+						<div zclass="col-md-6">
+							<div zclass="form-group">
+								<div class="flex">
+									<x:span class="label-txt-style">Họ và tên<n:small class="required" if="${!readOnly}"> *</n:small></x:span>
+								</div>
+								<textbox maxlength="255" class="form-control textbox-txt-style" readonly="${readOnly}" value="@bind(vm.hoVaTen)@save(vm.hoVaTen, before='saveNhanVien') @validator('vn.toancauxanh.vm.BaseValid', constraint='no empty')"
+									onFocus="self.select()" onBlur="self.setValue(self.getValue().trim())" placeholder="Nhập tên người dùng..."></textbox>
+								<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+							</div>
+						</div>
+						<div zclass="col-md-6" >
+							<div zclass="form-group">
+								<div class="flex">
+									<x:span class="label-txt-style">Vai trò người dùng<n:small class="required" if="${!readOnly}"> *</n:small></x:span>
+								</div>
+								<combobox buttonVisible="${!readOnly}" width="100%" class="hv-textbox ${!readOnly ? '' : 'input-no-button'}" readonly="true" disabled="${readOnly}"
+									model="@load(entry.vaiTros.vaiTroQuery.fetch())" placeholder="${readOnly ? '' : '-Chọn-'}"
+									selectedItem="@bind(vm.vaiTro) @save(vm.vaiTro, before='saveNhanVien') @validator(vm.validateVaiTro)">
+									<template name="model">
+										<comboitem label="@load(each.tenVaiTro)" />
+									</template>
+								</combobox>
+								<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div zclass="col-md-6">
+							<div zclass="form-group">
+								<div class="flex">
+									<x:span class="label-txt-style">Phòng ban<n:small class="required" if="${!readOnly}"> *</n:small></x:span>
+								</div>
+								<combobox buttonVisible="${!readOnly}" readonly="true" disabled="${readOnly}" model="@load(entry.phongBans.targetQuery.fetch())"
+									selectedItem="@bind(vm.phongBan) @save(vm.phongBan, before='saveNhanVien') @validator('vn.toancauxanh.vm.BaseValid', constraint='no empty')" class="his ${!readOnly ? '' : 'input-no-button'}" placeholder="${readOnly ? '' : 'Chọn phòng ban'}" width="100%">
+									<template name="model">
+										<comboitem label="@load(each.ten)" />
+									</template>
+								</combobox>
+								<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+							</div>
+						</div>
+						<div zclass="col-md-6">
+							<div zclass="form-group">
+								<x:span class="label-txt-style">Số điện thoại</x:span>
+								<textbox class="form-control textbox-txt-style" readonly="${readOnly}" width="100%" maxlength="11"
+									value="@bind(vm.soDienThoai) @save(vm.soDienThoai, before={'saveNhanVien'}) @validator(vm.validateSoDienThoai)" 
+									onFocus="self.select()" onBlur="self.setValue(self.getValue().trim())" >
+								</textbox>
+								<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div zclass="col-md-12">
+							<div zclass="form-group">
+								<div class="flex">
+									<x:span class="label-txt-style">Địa chỉ email<n:small class="required" if="${!readOnly}"> *</n:small></x:span>
+								</div>
+								<textbox class="form-control textbox-txt-style" readonly="${readOnly}" width="100%" maxlength="255"
+									value="@bind(vm.email) @save(vm.email, before={'saveNhanVien'}) @validator(vm.validatorEmail)"
+									onFocus="self.select()" onBlur="self.setValue(self.getValue().trim())"/>
+								<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+							</div>
+						</div>
+						<div zclass="col-md-12" if="${!readOnly and !vm.noId()}">
+							<div zclass="form-group">
+								<div class="checkbox checkbox-primary">
+									<checkbox class="ck-box" checked="@bind(vm.changePass)" />Đổi mật khẩu
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div if="${vm.noId()}">
+							<div zclass="col-md-6">
+								<div zclass="form-group">
+									<div class="flex">
+										<x:span class="label-txt-style">Mật khẩu<n:small class="required"> *</n:small></x:span>
+									</div>
+									<textbox maxlength="255" class="form-control" readonly="${readOnly }" width="100%" type="password" 
+										value="@bind(vm.matKhauEdit) @save(vm.matKhauEdit, before='saveNhanVien') @validator(vm.validateMatKhau)" />
+									<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+								</div>
+							</div>
+							<div zclass="col-md-6">
+								<div zclass="form-group">
+									<div class="flex">
+										<x:span class="label-txt-style">Nhập lại mật khẩu<n:small class="required"> *</n:small></x:span>
+									</div>
+									<textbox maxlength="255" class="form-control" readonly="${readOnly }" width="100%" type="password"
+										value="@bind(vm.matKhau2) @save(vm.matKhau2, before='saveNhanVien') @validator(vm.validateTrungKhop, pass = vm.matKhauEdit)" />
+									<label zclass="error"
+										value="@load(vmsgs[self.previousSibling])" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div if="${!vm.noId()}">
+							<div zclass="col-md-6" visible="@load(vm.changePass)">
+								<div zclass="form-group">
+									<div class="flex">
+										<x:span class="label-txt-style">Mật khẩu mới<n:small class="required"> *</n:small></x:span>
+									</div>
+									<textbox maxlength="255" class="form-control" readonly="${readOnly }"
+										width="100%" type="password" value="@bind(vm.matKhauUpdate) @save(vm.matKhauUpdate, before='saveNhanVien') @validator(vm.validateMatKhauMoiEdit)"
+											onFocus="self.select()" onBlur="self.setValue(self.getValue().trim())"/>
+									<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+								</div>
+							</div>
+							<div zclass="col-md-6" visible="@load(vm.changePass)">
+								<div zclass="form-group">
+									<div class="flex">
+										<x:span class="label-txt-style">Nhập lại mật khẩu<n:small class="required"> *</n:small></x:span>
+									</div>
+									<textbox maxlength="255" class="form-control" readonly="${readOnly }"
+										width="100%" type="password" value="@bind(vm.matKhauEdit) @save(vm.matKhauEdit, before='saveNhanVien') @validator(vm.validateMatKhauMoi, pass = vm.matKhauUpdate)"
+										onFocus="self.select()" onBlur="self.setValue(self.getValue().trim())" />
+									<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div zclass="col-md-6">
+							<div if="${!readOnly}" zclass="form-group txt-textbox-disable">
+								<x:span class="label-txt-style">Liên kết công chức sở nội vụ</x:span> 
+								<x:button zk:onClick="@command('redirectPage', zul='nguoidung/list-cong-chuc-so-noi-vu.zul', vm = vm)"
+									style="margin-top: 8px;" class="btn btn-blue">
+									<span>Chọn công chức</span>
+								</x:button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div style="text-align:center;">
+						<x:span class="label-txt-style">Ảnh đại diện</x:span>
+				    	<div class="form-group" style="margin-top: 5px;">
+				    		<div class="div-image custom-avatar">
+				    			<image visible="@load(vm.avatarImage ne null)" id="imageCmp" class="img-avarta-style"
+									content="@load(vm.avatarImage eq null ? imageNull : vm.avatarImage) @save(vm.avatarImage, before='saveNhanVien')">
+								</image>
+								<image class="img-avarta-style" visible="@load(vm.avatarImage eq null)" src="/assets/img/employeebig.png"></image>
+								<div if="${!readOnly}">
+									<x:button visible="@load(!empty vm.avatarImage)" zk:onClick="@command('deleteAvatarImage', vm=vm)"
+										type="button" class="close custom-remove" aria-label="Close">
+										<x:image class="img-edit" src="${contexPath}/assets/img/front/close.svg"/>
+									</x:button>
+									<div class="div-image-btn">
+										<button class="btn-upload-image-avarta" image="${contexPath}/assets/img/front/camera.svg" upload="true,maxsize=50000"
+										onUpload="@command('attachImages',media=event.media,vmsgs=vmsgs)"/>												
+									</div>
+								</div>
+				    		</div>			
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="mg-and-bg-and-line">
+				<div zclass="col-md-6">
+					<div zclass="form-group">
+						<x:button  class="btn bg-btn-dong btn-grey" zk:onClick="@command('invokeGG', notify=vmArgs, detach=wdn, attr='targetQueryNhanVien')">
+							<x:image class="img-title" src="${contexPath}/assets/icon-bxtdn/dong.svg"/>
+							<span>Đóng</span>
+						</x:button>
+					</div>
+				</div>
+				<div zclass="col-md-6">
+					<div zclass="form-group right">
+						<x:button  class="btn btn-blue mg-btn" if="${!readOnly and (!vm.noId() or vm.noId())}" zk:onClick="@command('saveNhanVien', list=vmArgs, attr='targetQueryNhanVien', wdn=wdn)">
+							<x:image class="img-title" src="${contexPath}/assets/icon-bxtdn/luu.svg"/>
+							<span>Lưu</span>
+						</x:button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</window>
+</idspace>

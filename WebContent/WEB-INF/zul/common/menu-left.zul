@@ -1,0 +1,56 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:n="native" xmlns:zk="zk" xmlns:x="xhtml" xmlns:u="zul">
+	<n:link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"></n:link>
+	<style>
+		.active-icon {color: #f4f5f7; position: absolute; font-size: 25px; right: 0px;} 
+		.ac-icon1 {top: 8px;}
+		.ac-icon2 {top: 66px;}
+		.ac-icon3 {top: 120px;} 
+		.ac-icon4 {top: 180px;}
+		.ac-icon5 {top: 234px;} 
+		i {font-style: normal;}
+		.collapse {display:block;}
+	</style>
+	<zscript>
+		<![CDATA[
+		         boolean checkActiveHeThong = false;
+		         if ("phongban".equals(resource) || "nguoidung".equals(resource) || "vaitro".equals(resource))  {
+		        	 checkActiveHeThong = true;
+		         }
+		]]>
+	</zscript>
+	<div class="nav-side-menu">
+        <div class="menu-list">
+			<n:ul class="menu-content collapse out" role="menu">
+				<n:li class="header-children ${checkActiveHeThong ? 'active-heder-li-children active-children' : ''}" zk:if="${entry.quyen.phongban_lietke || entry.quyen.nguoidung_lietke
+						 || entry.quyen.linhVucDuAn_lietke || entry.quyen.vaitro_lietke || entry.quyen.donvi_lietke || entry.quyen.donvixuctien_lietke 
+						 || entry.quyen.loaicongvieckehoach_lietke || entry.quyen.congvieckehoach_lietke || entry.quyen.masudungapi_lietke}">
+					<n:a onClick="toggleDropdownMenu(this)" style="padding-bottom:10px;">
+						<x:span class="img-menu qlht" zk:if="${resource ne 'phongban'}"></x:span>
+						<x:span class="img-menu qlht" zk:if="${resource eq 'phongban'}"></x:span>
+						<x:span class="text-menu">Quản trị hệ thống</x:span>
+					</n:a>
+					<n:ul class="children-nav show-children-active">
+						<n:div class="title-menu-parent">
+							<span class="txt-menu-parent">Quản trị hệ thống</span>
+						</n:div>
+						<n:a href="${execution.contextPath}/cp/nguoidung" zk:if="${entry.quyen.nguoidung_lietke}">
+							<n:li class="${resource eq 'nguoidung' ? 'active-children-nav' : '' }"><n:i class="fa fa-circle-thin" style="font-size:0.7em; padding: 0 37px 0 31px;"></n:i> Quản lý người dùng</n:li>
+						</n:a>
+					</n:ul>
+				</n:li>
+			</n:ul>
+		</div>
+	</div>
+	<n:script>
+		function toggleDropdownMenu(obj) {
+			var obCha = $(obj).parent();
+			var obCon = $(obCha).find(".children-nav");
+			if ($(obCon).css("max-height") == "0px") {
+				$(obCon).css("max-height", "600px");
+			} else {
+				$(obCon).css("max-height", "0px");
+			}
+		}
+	</n:script>
+</zk>

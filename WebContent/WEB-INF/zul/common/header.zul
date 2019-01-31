@@ -1,0 +1,178 @@
+<?page contentType="text/html;charset=UTF-8"?>
+<zk xmlns:n="native" xmlns:zk="zk" xmlns:x="xhtml" xmlns:u="zul" xmlns:w="client">
+	<zk:zscript><![CDATA[
+		entry = new vn.toancauxanh.service.BaseObject().core();
+		nhanVien = entry.nhanVien;
+		import java.awt.image.*;
+		BufferedImage image = new BufferedImage(400, 300, BufferedImage.TYPE_INT_ARGB);
+	]]></zk:zscript>	
+	<style>
+		.item-noti .notifi-mesg:hover {
+			color: #428bca;
+    		text-decoration: none;
+		}
+		.item-noti li:hover {
+			color: #428bca;
+    		text-decoration: none;
+    		background-color: #bce8f1;
+		}
+		.item-noti a:hover {
+    		text-decoration: none;
+		}
+		.item-noti span {
+			color: #428bca !important;
+			padding-right: 5px;
+		}
+		.item-noti .notifi-mesg {
+			margin: 0 10px !important;
+		}
+		.seeall {
+			text-align: center;
+			padding: 5px;
+			font-size: 13px;
+		}
+	</style>
+	
+	<n:div class="bg-popup-box" onclick="toggleBell()"></n:div>
+	
+	<n:nav class="header-top-be">
+		<div class="box-header-left">
+			<div zclass="menu-header-logo">
+				<n:div>
+					<n:a href="${ctxPath}/cp"><x:image class="logo-image" src="${contexPath}/assets/icon-bxtdn/logo.png"/></n:a>
+				</n:div>
+				<n:a class="nav-title-page" href="${ctxPath}/cp">
+					<n:h5 style="margin-top:10px;">TRỤC LIÊN THÔNG</n:h5>
+					<n:h5>VĂN BẢN QUẢNG NAM</n:h5>
+				</n:a>
+			</div>
+			<div class="box-header-imgbar">
+				<x:image href="${ctxPath}" width="19px" height="16px" src="${contexPath}/assets/icon-bxtdn/menu-top.svg" onclick="toggleMenuDesktop()"/>
+			</div>
+		</div>
+		
+		<div style="display:flex;">
+			<include instant="true" src="/WEB-INF/zul/common/thongbao.zul" style="z-index:1799;"/>
+			
+			<div viewModel="@id('vm') @init(nhanVien)">
+				<n:ul class="nav box-user-fm">
+					<n:li class="dropdown pd-header-avarta" style="display: inline-block">
+						<n:a class="dropdown-toggle box-header-users" href="#">
+							<div class="avatar-home">
+				         		<image visible="@load(vm.avatarImage ne null)" content="@load(vm.avatarImage eq null ? image : vm.avatarImage)"></image>
+				         		<image visible="@load(vm.avatarImage eq null)" src="/assets/img/employeebig.png"></image>
+				         	</div>
+				         	<x:span>${vm.hoVaTen}</x:span>
+							<n:i class="fa fa-chevron-down"></n:i>
+						</n:a>
+						<n:ul class="dropdown-menu dropdown-menu-right dropdown-user">
+							<n:li>
+								<x:a class="info-user" onClick="@command('redirectEditUser', zul='thongtinnguoidung/add-view.zul',vmArgs=null,vm=vm)" href="#">
+									<x:image class="img-trogiup img-info" src="${contexPath}/assets/img/front/nguoidung.svg"/>
+									Thông tin người dùng
+								</x:a>
+							</n:li>
+							<n:li class="divider"></n:li>
+							<n:li>
+								<x:a class="info-user" href="${execution.contextPath}/logout">
+									<n:i class="fa fa-sign-out fa-fw"></n:i>
+									&#160;&#160;&#160;Đăng xuất
+								</x:a>
+							</n:li>
+						</n:ul>
+						<!-- /.dropdown-user -->
+					</n:li>
+					<!-- /.dropdown -->
+				</n:ul>
+			</div>
+		</div>
+		<!-- /.navbar-top-links -->
+	</n:nav>
+	
+	<n:script>
+		function toggleMenuDesktop() {
+			if ($(".nav-side-menu").css("width") == "243px") {
+				$(".text-menu").css("display","none");
+				$(".children-nav").css("height", "0");
+				$(".nav-side-menu").css("width","50px");
+				$(".img-menu").css("margin","0");
+				$(".header-parent").css("width", "50px");
+				$(".header-children").css("width", "50px");
+			} else {
+				$(".nav-side-menu").css("width","243px");
+				$(".img-menu").css("margin","0 20px 0 10px");
+				$(".children-nav").css("height", "auto");
+				$(".header-parent").css("width", "auto");
+				$(".header-children").css("width", "auto");
+				$(".active-children").children(".children-nav").css("max-height", "500px");
+				$(".text-menu").css("display", "inline");
+				
+			}
+		}
+		
+		$(".header-parent").hover(
+		  function() {
+		  	if ($(".header-parent").css("width") == "50px") {
+		  		var obj = $(this).children(".box-title-parent");
+		  		$(obj).children(".title-menu-parent").css("display", "flex");
+		  		$(this).css("overflow", "unset");
+		  	}
+		  }, function() {
+		  	var obj = $(this).children(".box-title-parent");
+		  	$(obj).children(".title-menu-parent").css("display", "none");
+		  	$(this).css("overflow", "hidden");
+		  }
+		);
+		$(".header-children").hover(
+		  function() {
+		  	if ($(".nav-side-menu").css("width") == "50px") {
+		  		var obj = $(this).children(".children-nav");
+		  		obj.addClass("menu-sub-children");
+		  		$(obj).children(".title-menu-parent").css("display", "flex");
+		  		$(this).css("overflow", "unset");
+		  	}
+		  }, function() {
+		  	var obj = $(this).children(".children-nav");
+		    $(obj).removeClass("menu-sub-children");
+		    $(obj).children(".title-menu-parent").css("display", "none");
+		    $(this).css("overflow", "hidden");
+		  }
+		);
+		function toggleMenu() {
+			if ($(".nav-side-menu").css("display") == "none"){
+				$(".nav-side-menu").css("display","block");
+				$("body").css("overflow","hidden");
+			} else {
+				$(".nav-side-menu").css("display","none");
+				$("body").css("overflow","auto");
+			}
+		}
+		function toggleBell() {
+			if ($( window ).width() > 500) {
+				if ($(".box-dropdown-bg").css("display") == "none"){
+					$(".box-dropdown-bg").css("display", "block");
+					$(".bg-popup-box").css("display", "block");
+					$(".none-display").css("display", "flex");
+				} else {
+					$(".box-dropdown-bg").css("display","none");
+					$(".bg-popup-box").css("display","none");
+					$(".none-display").css("display","none");
+				}
+			} else {
+				if ($(".box-dropdown-bg").css("display") == "none") {
+					$(".box-dropdown-bg").css("display","block");
+					$(".bg-popup-box").css("display","block");
+					$(".none-display").css("display", "flex");
+					$("html").css("overflow","hidden");
+					$("body").css("overflow","hidden");
+				} else {
+					$(".box-dropdown-bg").css("display","none");
+					$(".bg-popup-box").css("display","none");
+					$(".none-display").css("display","none");
+					$("html").css("overflow","auto");
+					$("body").css("overflow","auto");
+				}
+			}
+		}
+	</n:script>
+</zk>

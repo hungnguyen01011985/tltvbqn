@@ -1,0 +1,162 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:n="native" xmlns:zk="zk" xmlns:x="xhtml" xmlns:u="zul" xmlns:w="client" >
+	<div viewModel="@id('vm') @init('vn.toancauxanh.service.ThongBaoService')">
+		<zscript>
+			congViec = vn.toancauxanh.gg.model.enums.LoaiThongBao.CONG_VIEC_MOI;
+			treCongVan = vn.toancauxanh.gg.model.enums.LoaiThongBao.TRE_CONG_VIEC;
+			nhacNho = vn.toancauxanh.gg.model.enums.LoaiThongBao.NHAC_NHO_CONG_VIEC;
+			denHan = vn.toancauxanh.gg.model.enums.LoaiThongBao.DEN_HAN_CONG_VIEC;
+			phuTrachCongViec = vn.toancauxanh.gg.model.enums.LoaiThongBao.PHU_TRACH_CONG_VIEC;
+			chuyenCongViec = vn.toancauxanh.gg.model.enums.LoaiThongBao.CHUYEN_CONG_VIEC_DOAN_VAO;
+			chuyenNguoiPhuTrach = vn.toancauxanh.gg.model.enums.LoaiThongBao.CHUYEN_NGUOI_PHU_TRACH;
+			huyNhiemVu = vn.toancauxanh.gg.model.enums.LoaiThongBao.HUY_CONG_VIEC;
+		</zscript>
+		<n:ul class="box-bell" style="list-style:none;">
+			<n:li class="box-relative dropdown">
+				<n:div onclick="toggleBell()">
+					<x:image class="img-notify ${vm.sizeNewNotify > 0 ? 'img-notify-animation' : ''}" width="18px" height="20px" src="${contexPath}/assets/icon-bxtdn/notification.svg"/>
+					<div class="number-box" if="${vm.sizeNewNotify != 0}">
+						<x:span>${vm.sizeNewNotify}</x:span>
+					</div>
+				</n:div>
+				<n:ul class="dropdown-menu box-dropdown-bg" style="left:auto !important; right: -20px;">
+					<x:li class="container-notify" if="${vm.targetQuery.fetchCount() == 0}">
+						<x:span class="notify-nothing">Bạn không có thông báo</x:span>
+					</x:li>
+					<div class="box-content-thongbao" zk:children="@load(vm.page(vm.targetQuery).fetch())" style="max-height: 500px;
+   						 overflow-y: scroll;">
+						<template name="children">
+							<x:li class="container-notify ${each.daXem ? '' : 'bg-new-notify'}" zk:onClick="@command('viewNotify', item = each)">
+								<div class="image-notify">
+									<x:image href="${ctxPath}" width="44px" height="44px" src="${contexPath}/assets/img/employeebig.png"/>
+								</div>
+								<div class="content-notify">
+									<div class="box-content-notify">
+										<div if="${treCongVan == each.loaiThongBao}">
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 0)}
+											</x:span>
+											<x:span class="text-bold-notify">
+												${vm.subString(vm.subStringThongBao(each.noiDung, 1), 20)}
+											</x:span>
+										</div>
+										<div if="${phuTrachCongViec == each.loaiThongBao}">
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 0)}
+											</x:span>
+											<x:span class="text-bold-notify">
+												${vm.subString(vm.subStringThongBao(each.noiDung, 1), 20)}
+											</x:span>
+										</div>
+										<div if="${chuyenNguoiPhuTrach == each.loaiThongBao}">
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 0)}
+											</x:span>
+											<x:span class="text-bold-notify">
+												${vm.subString(vm.subStringThongBao(each.noiDung, 1), 20)}
+											</x:span>
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 2)}
+											</x:span>
+											<x:span class="text-bold-notify">
+												${vm.subStringThongBao(each.noiDung, 3)}
+											</x:span>
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 4)}
+											</x:span>
+										</div>
+										<div if="${chuyenCongViec == each.loaiThongBao}">
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 0)}
+											</x:span>
+											<x:span class="text-bold-notify">
+												${vm.subStringThongBao(each.noiDung, 1)}
+											</x:span>
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 2)}
+											</x:span>
+											<x:span class="text-bold-notify">
+												${vm.subStringThongBao(each.noiDung, 3)}
+											</x:span>
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 4)}
+											</x:span>
+										</div>
+										<div if="${congViec == each.loaiThongBao}">
+											<x:span class="text-bold-notify">
+												${vm.subStringThongBao(each.noiDung, 0)}
+											</x:span>
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 1)}
+											</x:span>
+											<x:span class="text-bold-notify">
+												${vm.subString(vm.subStringThongBao(each.noiDung, 2), 20)}
+											</x:span>
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 3)}
+											</x:span>
+											<x:span class="text-bold-notify">
+												${vm.subString(vm.subStringThongBao(each.noiDung, 4), 20)}
+											</x:span>
+										</div>
+										<div if="${nhacNho == each.loaiThongBao}">
+											<x:span class="text-bold-notify">
+												${vm.subStringThongBao(each.noiDung, 0)}
+											</x:span>
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 1)}
+											</x:span>
+											<x:span class="text-bold-notify">
+												${vm.subStringThongBao(each.noiDung, 2)}
+											</x:span>
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 3)}
+											</x:span>
+											<x:span class="text-bold-notify">
+												${vm.subStringThongBao(each.noiDung, 4)}
+											</x:span>
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 5)}
+											</x:span>
+										</div>
+										<div if="${denHan == each.loaiThongBao}">
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 0)}
+											</x:span>
+											<x:span class="text-bold-notify">
+												${vm.subStringThongBao(each.noiDung, 1)}
+											</x:span>
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 2)}
+											</x:span>
+										</div>
+										<div if="${huyNhiemVu == each.loaiThongBao}">
+											<x:span class="text-bold-notify">
+												${vm.subStringThongBao(each.noiDung, 0)}
+											</x:span>
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 1)}
+											</x:span>
+											<x:span class="text-bold-notify">
+												${vm.subStringThongBao(each.noiDung, 2)}
+											</x:span>
+											<x:span class="text-regular-notify">
+												${vm.subStringThongBao(each.noiDung, 3)}
+											</x:span>
+										</div>
+									</div>
+									<div class="box-content-notify">
+										<x:span class="text-date-notify">${each.ngayTao}</x:span>
+									</div>
+								</div>
+							</x:li>
+						</template>
+					</div>
+					<div class="show-all-notify" if="${vm.targetQuery.fetchCount() > 10}">
+						<x:a href="${ctxPath}/cp/thongbao">Xem tất cả</x:a>
+					</div>
+				</n:ul>
+			</n:li>
+		</n:ul>
+	</div>
+</zk>

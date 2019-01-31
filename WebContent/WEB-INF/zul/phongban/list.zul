@@ -1,0 +1,120 @@
+<?page title="Thông tin văn bản" contentType="text/html;charset=UTF-8"?>
+<window xmlns:zk="zk" xmlns:n="native" xmlns:x="xhtml" apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('vn.toancauxanh.cms.service.PhongBanService')"
+	 class="form-list">
+	<zscript>
+		<![CDATA[
+			page.title = "Quản trị hệ thống";
+		]]>
+	</zscript>
+	<div>
+		<div class="panel-box">
+			<div zclass="row">
+				<div zclass="col-lg-12">
+					<n:span class="page-header-title">
+						Quản lý phòng ban
+					</n:span>
+				</div>
+			</div>
+		</div>
+		<div class="panel-box border-box">
+			<div zclass="row mg-top-no-line">	
+				<div zclass="col-md-10">
+					<div zclass="form-group">
+						<x:span class="issue-search">Nhập tên phòng ban</x:span> 
+						<textbox class="form-control" value="@bind(vm.arg.tuKhoa)" onOK="@command('cmd', notify=vm, attr='targetQuery')"
+							 placeholder="Nhập tên phòng ban.."></textbox>
+					</div>
+				</div>
+				<div zclass="col-md-2">
+					<div zclass="form-group">
+						<x:a class="btn btn-base btn-green mgn-top-26" zk:onClick="@command('cmd', notify=vm, attr='targetQuery')">
+							<x:image class="img-title" src="${contexPath}/assets/icon-bxtdn/search.svg"/>
+							<span>Tìm kiếm</span>
+						</x:a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel-box border-box">
+			<div zclass="row">
+				<div zclass="col-lg-12">
+					<div class="title-form">
+						<span>Danh sách phòng ban</span>
+					</div>
+				</div>
+			</div>
+			<div zclass="row mg-and-bg-and-line">
+				<div zclass="col-md-12 w-table-no-scroll">
+					<grid id="grid" model="@load(vm.page(vm.targetQuery).fetch())"
+						emptyMessage="Không có dữ liệu nào trong danh sách">
+						<columns>
+							<column label="STT" style="text-align:center" width="42px"/>
+							<column label="Phòng ban" style="text-align:center" />
+							<column label="Mô tả" style="text-align:center" />
+							<column label="Thao tác" style="text-align:center" width="110px"/>
+						</columns>
+						<template name="model">
+							<row viewModel="@id('item') @init(each)">
+								<label value="@bind(forEachStatus.index + 1 + vm.arg.page * vm.arg.pagesize)" style="display:flex; justify-content:center;"></label>
+								<label value="@load(item.ten)" zk:if="${entry.quyen.phongban_xem}"
+									onClick="@command('redirectPageAction', zul='phongban/show-edit-phong-ban.zul', vmArgs=vm, vm=item, readOnly=true)" sclass="txt-link-table"/>
+								<label value="@load(item.subString(item.moTa , 120))"></label>
+								<div class="thaotac" style="text-align:center">
+									<x:a label="Sửa" class="btn-thaotac left" zk:if="${entry.quyen.phongban_sua}" zk:onClick="@command('redirectPage', zul='phongban/show-edit-phong-ban.zul', vmArgs=vm, vm=item)">
+										<x:image class="img-edit" width="20px" title="Sửa" src="${contexPath}/assets/icon-bxtdn/sua.svg"/>
+										<x:span>Sửa</x:span>
+									</x:a>
+									<x:a label="Xóa" class="btn-thaotac up-note" zk:if="${entry.quyen.phongban_xoa}" zk:onClick="@command('deleteTrangThaiConfirmAndNotifyAndCheck', notify=vm, attr='targetQuery', type='phongban')">
+										<x:image class="img-edit" title="Xóa" src="${contexPath}/assets/icon-bxtdn/xoa.svg"/>
+										<x:span>Xóa</x:span>
+									</x:a>
+								</div>
+								<zscript>
+									<![CDATA[
+											if(vm.getArg().get("page") == null) {
+												vm.getArg().put("page", 0);
+											}
+									         if (forEachStatus.isFirst()) {
+									        	 vm.setFirst(forEachStatus.getIndex() + 1 + vm.getArg().get("page") * vm.getArg().get("pagesize"));
+									         }
+									         if(forEachStatus.isLast()) {
+									        	 vm.setLast(forEachStatus.getIndex() + 1 + vm.getArg().get("page") * vm.getArg().get("pagesize"));
+									         }
+											BindUtils.postNotifyChange(null, null, vm, "first");
+											BindUtils.postNotifyChange(null, null, vm, "last");
+									]]>
+								</zscript>
+							</row>
+						</template>
+					</grid>
+					<div style="margin:0 -7.5px" visible="@load(vm.targetQuery.fetchCount() > vm.arg.pagesize ? true : false)">
+						<div class="col-md-6" style="margin-top:10px;">
+							<label value="Hiển thị từ "></label>
+							<label value="@load(vm.first)"></label>
+							<label value="-"></label>
+							<label value="@load(vm.last)"></label>
+							<label value=" trong tổng số  "></label>
+							<label value="@load(vm.targetQuery.fetchCount())"></label>
+							<label value=" kết quả"></label>
+						</div>
+						<div class="col-md-6">
+							<paging pageSize="@load(vm.arg.pagesize)" totalSize="@load(vm.targetQuery.fetchCount())" mold="os"
+							activePage="@bind(vm.arg.page)" onPaging="@command('cmd', notify=vm, attr='targetQuery')" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row mg-and-bg-and-line" if="${entry.quyen.phongban_them}">
+				<div zclass="col-md-12">
+					<div zclass="form-group right" if="${entry.quyen.phongban_them}">
+						<x:button class="btn btn-blue" zk:onClick="@command('redirectPage', zul='phongban/show-add-phong-ban.zul', vmArgs=vm, vm=null)">
+							<x:image class="img-title" src="${contexPath}/assets/icon-bxtdn/them-moi.svg"/>
+							<span>Thêm mới</span>
+						</x:button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</window>

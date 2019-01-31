@@ -1,0 +1,142 @@
+<?page title="Quản lý người dùng" contentType="text/html;charset=UTF-8"?>
+<window xmlns:zk="zk" xmlns:n="native" xmlns:x="xhtml" apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('vn.toancauxanh.service.NhanVienService')"
+	class="form-list">
+	<style>
+		.z-combobox-content {
+			max-width: 294px;
+		}
+	</style>
+	<zscript>
+		<![CDATA[
+			page.title = "Quản lý người dùng";
+		]]>
+	</zscript>
+	<div>
+		<div class="panel-box">
+			<div zclass="row">
+				<div zclass="col-lg-12">
+					<n:span class="page-header-title">
+						Quản lý người dùng
+					</n:span>
+				</div>
+			</div>
+		</div>
+		<div class="panel-box border-box">
+			<div zclass="row mg-top-no-line">
+				<div zclass="col-md-7">
+					<div zclass="form-group">
+						<x:span class="issue-search">Tài khoản người dùng</x:span>
+						<textbox class="form-control" value="@bind(vm.arg.tuKhoa)" onOK="@command('cmd', notify=vm, attr='targetQueryNhanVien')" placeholder="Nhập tên người dùng..."></textbox>
+						<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+					</div>
+				</div>
+				<div zclass="col-md-3">
+					<div zclass="form-group">
+						<x:span class="issue-search">Phòng ban</x:span> 
+						<combobox readonly="true" model="@load(entry.phongBans.listPhongBanAndNull)"
+							value="@load(vm.arg.phongBan eq null ? 'Tất cả' : vm.arg.phongBan.ten)" selectedItem="@bind(vm.arg.phongBan)" class="his" placeholder="Chọn phòng ban" width="100%">
+							<template name="model">
+								<comboitem label="@load(each eq null ? 'Tất cả' : each.ten)" />
+							</template>
+						</combobox>
+						<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
+					</div>
+				</div>
+				<div zclass="col-md-2">
+					<div zclass="form-group">
+						<x:a class="btn btn-base btn-green mgn-top-26" zk:onClick="@command('cmd', notify=vm, attr='targetQueryNhanVien')">
+							<x:image class="img-title" src="${contexPath}/assets/icon-bxtdn/search.svg"/>
+							<span>Tìm kiếm</span>
+						</x:a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel-box border-box">
+			<div zclass="row">
+				<div zclass="col-lg-12">
+					<div class="title-form">
+						<span>Danh sách tài khoản người dùng</span>
+					</div>
+				</div>
+			</div>
+			<div zclass="row mg-and-bg-and-line">
+				<div zclass="col-md-12 w-table-no-scroll">
+					<grid id="grid" model="@load(vm.page(vm.targetQueryNhanVien).fetch())"
+						emptyMessage="Không có dữ liệu nào trong danh sách">
+						<columns>
+							<column label="STT" style="text-align:center" width="42px"/>
+							<column label="Tên"/>
+							<column label="Email" width="190px"/>
+							<column label="Phòng ban" width="120px"/>
+							<column label="Vị trí" width="110px" />
+							<column label="Thao tác" width="120px"/>
+						</columns>
+						<template name="model">
+							<row viewModel="@id('item') @init(each)">
+								<label value="@bind(forEachStatus.index + 1 + vm.arg.page * vm.arg.pagesize)" style="display:flex; justify-content:center;"></label>
+								<label value="@load(each.hoVaTen)" zk:if="${entry.quyen.nguoidung_xem}"
+									onClick="@command('redirectPageAction', zul='nguoidung/show-edit-nguoi-dung.zul', vmArgs=vm, vm=item, readOnly=true)" sclass="txt-link-table"/>
+								<label value="@load(item.email)"></label>
+								<label value="@load(item.phongBan.ten)"></label>
+								<label value="@load(item.vaiTroText)"></label>
+								<div class="thaotac" style="text-align:center">
+									<x:a label="Sửa" class="btn-thaotac left" zk:if="${entry.quyen.nguoidung_sua}" onClick="@command('redirectPageAction', zul='nguoidung/show-edit-nguoi-dung.zul',vmArgs=vm,vm=item,readOnly=false)">
+										<x:image class="img-edit" width="20px" title="Sửa" src="${contexPath}/assets/icon-bxtdn/sua.svg"/>
+										<x:span>Sửa</x:span>
+									</x:a>
+									<x:a label="Xóa" class="btn-thaotac up-note" zk:if="${entry.quyen.nguoidung_xoa}"
+										onClick="@command('deleteTrangThaiConfirmAndNotifyAndCheck', notify=vm, attr='targetQueryNhanVien', type='nguoidung')">
+										<x:image class="img-edit" title="Xóa" src="${contexPath}/assets/icon-bxtdn/xoa.svg"/>
+										<x:span>Xóa</x:span>
+									</x:a>
+								</div>
+								<zscript>
+									<![CDATA[
+											if(vm.getArg().get("page") == null) {
+												vm.getArg().put("page", 0);
+											}
+									         if (forEachStatus.isFirst()) {
+									        	 vm.setFirst(forEachStatus.getIndex() + 1 + vm.getArg().get("page") * vm.getArg().get("pagesize"));
+									         }
+									         if(forEachStatus.isLast()) {
+									        	 vm.setLast(forEachStatus.getIndex() + 1 + vm.getArg().get("page") * vm.getArg().get("pagesize"));
+									         }
+											BindUtils.postNotifyChange(null, null, vm, "first");
+											BindUtils.postNotifyChange(null, null, vm, "last");
+									]]>
+								</zscript>
+							</row>
+						</template>
+					</grid>
+					<div style="margin:0 -7.5px" visible="@load(vm.targetQueryNhanVien.fetchCount() > vm.arg.pagesize ? true : false)">
+						<div class="col-md-6" style="margin-top:10px;">
+							<label value="Hiển thị từ "></label>
+							<label value="@load(vm.first)"></label>
+							<label value="-"></label>
+							<label value="@load(vm.last)"></label>
+							<label value=" trong tổng số  "></label>
+							<label value="@load(vm.targetQueryNhanVien.fetchCount())"></label>
+							<label value=" kết quả"></label>
+						</div>
+						<div class="col-md-6">
+							<paging pageSize="@load(vm.arg.pagesize)" totalSize="@load(vm.targetQueryNhanVien.fetchCount())" mold="os"
+							activePage="@bind(vm.arg.page)" onPaging="@command('cmd', notify=vm, attr='targetQueryNhanVien')" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row mg-and-bg-and-line">
+				<div zclass="col-md-12">
+					<div zclass="form-group right">
+						<x:a  class="btn btn-blue" zk:if="${entry.quyen.nguoidung_them}" zk:onClick="@command('redirectPage', zul='nguoidung/show-add-nguoi-dung.zul',vmArgs=vm,vm=null)">
+						<x:image class="img-title" src="${contexPath}/assets/icon-bxtdn/them-moi.svg"/>
+							<span>Thêm mới</span>
+						</x:a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</window>

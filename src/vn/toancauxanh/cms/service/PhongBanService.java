@@ -11,10 +11,7 @@ import org.zkoss.bind.annotation.Command;
 
 import com.querydsl.jpa.impl.JPAQuery;
 
-import vn.toancauxanh.gg.model.enums.LoaiVaiTro;
-import vn.toancauxanh.model.NguoiDung;
 import vn.toancauxanh.model.PhongBan;
-import vn.toancauxanh.model.QNguoiDung;
 import vn.toancauxanh.model.QPhongBan;
 import vn.toancauxanh.service.BasicService;
 import vn.toancauxanh.service.ExcelUtil;
@@ -59,19 +56,7 @@ public class PhongBanService extends BasicService<PhongBan> {
 		return list;
 	}
 	
-	public List<NguoiDung> getListNhanVienTheoPhongBan() {
-		List<NguoiDung> list = new ArrayList<>();
-		if (phongBanSelected != null && phongBanSelected.getId() > 0) {
-			JPAQuery<NguoiDung> q = find(NguoiDung.class)
-					.where(QNguoiDung.nguoiDung.phongBan.id.eq(phongBanSelected.getId()))
-					.where(QNguoiDung.nguoiDung.vaiTros.any().loaiVaiTro.eq(LoaiVaiTro.VAI_TRO_CHUYEN_VIEN).or(QNguoiDung.nguoiDung.vaiTros.any().loaiVaiTro.eq(LoaiVaiTro.VAI_TRO_TRUONG_PHONG)));
-			if (q.fetchCount() > 0) {
-				list.addAll(q.fetch());
-				return list;
-			}
-		}
-		return list;
-	}
+
 
 	@Command
 	public void xuatExcel(@BindingParam("query") final JPAQuery<PhongBan> query,

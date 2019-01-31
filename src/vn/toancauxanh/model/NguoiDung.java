@@ -1,11 +1,7 @@
 package vn.toancauxanh.model;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -26,7 +21,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -40,12 +34,7 @@ import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.sys.ValidationMessages;
 import org.zkoss.bind.validator.AbstractValidator;
-import org.zkoss.image.AImage;
-import org.zkoss.image.Image;
-import org.zkoss.io.Files;
-import org.zkoss.util.media.Media;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Session;
@@ -62,75 +51,21 @@ import com.querydsl.jpa.impl.JPAQuery;
 import vn.toancauxanh.service.Quyen;
 
 @Entity
-@Table(name = "nhanvien")
+@Table(name = "nguoidung")
 public class NguoiDung extends Model<NguoiDung> {
-	private String chucVu = "";
-	private String diaChi = "";
+	private String tenHienThi = "";
+	private String taiKhoan="";
 	private String email = "";
-	private String hoVaTen = "";
+	private String loaiTaiKhoan = "";
+	private String loaiXacThuc;
 	private String matKhau = "";
-	private String matKhauCu = "";
 	private String salkey = "";
-	private String soDienThoai = "";
-	private String pathAvatar = "";
-	private String matKhauUpdate = "";
-	private String matKhau2 = "";
-	private boolean selectedDV;
-	private Date ngaySinh;
+	private boolean block;
+	private boolean active;
 	private Set<String> quyens = new HashSet<>();
 	private Set<String> tatCaQuyens = new HashSet<>();
 	private Set<VaiTro> vaiTros = new HashSet<>();
-	private Image avatarImage;
-	private PhongBan phongBan;
 	private VaiTro vaiTro;
-
-	@ManyToOne
-	public PhongBan getPhongBan() {
-		return phongBan;
-	}
-
-	public void setPhongBan(PhongBan phongBan) {
-		this.phongBan = phongBan;
-	}
-
-	@Transient
-	public String getMatKhauUpdate() {
-		return matKhauUpdate;
-	}
-
-	public void setMatKhauUpdate(String matKhauUpdate) {
-		this.matKhauUpdate = matKhauUpdate;
-	}
-
-	@Transient
-	public String getMatKhauCu() {
-		return matKhauCu;
-	}
-
-	public void setMatKhauCu(String matKhauCu) {
-		this.matKhauCu = matKhauCu;
-	}
-
-	public String getPathAvatar() {
-		return pathAvatar;
-	}
-
-	public void setPathAvatar(String pathAvatar) {
-		this.pathAvatar = pathAvatar;
-	}
-
-	@Transient
-	public Image getAvatarImage() throws FileNotFoundException, IOException {
-		if (avatarImage == null) {
-			loadImageIsView();
-		}
-		return avatarImage;
-	}
-
-	public void setAvatarImage(Image avatarImage) {
-		this.avatarImage = avatarImage;
-	}
-
 	private Quyen quyen = new Quyen(new SimpleAccountRealm() {
 		@Override
 		protected AuthorizationInfo getAuthorizationInfo(final PrincipalCollection arg0) {
@@ -139,6 +74,58 @@ public class NguoiDung extends Model<NguoiDung> {
 			return info;
 		}
 	});
+	
+	public NguoiDung() {
+		super();
+	}
+
+	public String getTenHienThi() {
+		return tenHienThi;
+	}
+
+	public void setTenHienThi(String tenHienThi) {
+		this.tenHienThi = tenHienThi;
+	}
+
+	public String getTaiKhoan() {
+		return taiKhoan;
+	}
+
+	public void setTaiKhoan(String taiKhoan) {
+		this.taiKhoan = taiKhoan;
+	}
+
+	public String getLoaiTaiKhoan() {
+		return loaiTaiKhoan;
+	}
+
+	public void setLoaiTaiKhoan(String loaiTaiKhoan) {
+		this.loaiTaiKhoan = loaiTaiKhoan;
+	}
+
+	public String getLoaiXacThuc() {
+		return loaiXacThuc;
+	}
+
+	public void setLoaiXacThuc(String loaiXacThuc) {
+		this.loaiXacThuc = loaiXacThuc;
+	}
+
+	public boolean isBlock() {
+		return block;
+	}
+
+	public void setBlock(boolean block) {
+		this.block = block;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 
 	public String getSalkey() {
 		return salkey;
@@ -146,15 +133,6 @@ public class NguoiDung extends Model<NguoiDung> {
 
 	public void setSalkey(String salkey) {
 		this.salkey = salkey;
-	}
-
-	@Transient
-	public String getMatKhau2() {
-		return matKhau2;
-	}
-
-	public void setMatKhau2(String matKhau2) {
-		this.matKhau2 = matKhau2;
 	}
 
 	@ManyToOne
@@ -169,7 +147,7 @@ public class NguoiDung extends Model<NguoiDung> {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-	@CollectionTable(name = "nhanvien_quyens", joinColumns = { @JoinColumn(name = "nhanVien_id") })
+	@CollectionTable(name = "nguoidung_quyens", joinColumns = { @JoinColumn(name = "nguoiDung_id") })
 	public Set<String> getQuyens() {
 		return quyens;
 	}
@@ -214,14 +192,11 @@ public class NguoiDung extends Model<NguoiDung> {
 		return result;
 	}
 
-	public NguoiDung() {
-		super();
-	}
 
-	public NguoiDung(final String email_, final String _hoTen) {
+	public NguoiDung(String email, String taiKhoan) {
 		super();
-		email = email_;
-		hoVaTen = _hoTen;
+		this.taiKhoan = taiKhoan;
+		this.email = email;
 	}
 
 	@Override
@@ -229,32 +204,12 @@ public class NguoiDung extends Model<NguoiDung> {
 		super.doSave();
 	}
 
-	public String getChucVu() {
-		return chucVu;
-	}
-
-	public String getDiaChi() {
-		return diaChi;
-	}
-
 	public String getEmail() {
 		return email;
 	}
 
-	public String getHoVaTen() {
-		return hoVaTen;
-	}
-
 	public String getMatKhau() {
 		return matKhau;
-	}
-
-	public Date getNgaySinh() {
-		return ngaySinh;
-	}
-
-	public String getSoDienThoai() {
-		return soDienThoai;
 	}
 
 	public boolean changePass;
@@ -280,39 +235,19 @@ public class NguoiDung extends Model<NguoiDung> {
 	}
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "nhanvien_vaitro", joinColumns = { @JoinColumn(name = "nhanvien_id") }, inverseJoinColumns = {
+	@JoinTable(name = "nguoidung_vaitro", joinColumns = { @JoinColumn(name = "nguoidung_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "vaitros_id") })
 	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 	public Set<VaiTro> getVaiTros() {
 		return vaiTros;
 	}
 
-	public void setChucVu(final String _chuVu) {
-		chucVu = Strings.nullToEmpty(_chuVu);
-	}
-
-	public void setDiaChi(final String _diaChi) {
-		diaChi = Strings.nullToEmpty(_diaChi);
-	}
-
 	public void setEmail(final String _email) {
 		email = Strings.nullToEmpty(_email);
 	}
 
-	public void setHoVaTen(final String _hoVaTen) {
-		hoVaTen = Strings.nullToEmpty(_hoVaTen);
-	}
-
 	public void setMatKhau(final String _matKhau) {
 		matKhau = Strings.nullToEmpty(_matKhau);
-	}
-
-	public void setNgaySinh(final Date _ngaySinh) {
-		ngaySinh = _ngaySinh;
-	}
-
-	public void setSoDienThoai(final String _soDienThoai) {
-		soDienThoai = Strings.nullToEmpty(_soDienThoai);
 	}
 
 	public void setVaiTros(final Set<VaiTro> vaiTros1) {
@@ -322,14 +257,6 @@ public class NguoiDung extends Model<NguoiDung> {
 	@Transient
 	public Quyen getTatCaQuyen() {
 		return quyen;
-	}
-
-	public boolean isSelectedDV() {
-		return selectedDV;
-	}
-
-	public void setSelectedDV(boolean selectedDV) {
-		this.selectedDV = selectedDV;
 	}
 
 	@Transient // Khai báo k khởi tạo xuống db
@@ -450,7 +377,7 @@ public class NguoiDung extends Model<NguoiDung> {
 	@Command
 	public void deleteNhanVienInListVaiTro(@BindingParam("vaitro") final VaiTro vt,
 			@BindingParam("nhanvien") final NguoiDung nv) {
-		Messagebox.show("Bạn có chắc chắn muốn xóa vai trò " + vt.getTenVaiTro() + " của nhân viên " + nv.getHoVaTen(),
+		Messagebox.show("Bạn có chắc chắn muốn xóa vai trò " + vt.getTenVaiTro() + " của nhân viên " + nv.getTenHienThi(),
 				"Xác nhận", Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION, new EventListener<Event>() {
 					@Override
 					public void onEvent(final Event event) {
@@ -462,100 +389,6 @@ public class NguoiDung extends Model<NguoiDung> {
 						}
 					}
 				});
-	}
-
-	@Command
-	public void attachImages(@BindingParam("media") final Media media,
-			@BindingParam("vmsgs") final ValidationMessages vmsgs) {
-		if (media instanceof org.zkoss.image.Image) {
-			if (media.getName().toLowerCase().endsWith(".png") || media.getName().toLowerCase().endsWith(".jpg")) {
-				int lengthOfImage = media.getByteData().length;
-				if (lengthOfImage > 10000000) {
-					showNotification("Chọn hình ảnh có dung lượng nhỏ hơn 10MB.", "", "danger");
-					return;
-				} else {
-					String tenFile = media.getName();
-
-					tenFile = tenFile.replace(" ", "");
-					tenFile = unAccent(tenFile.substring(0, tenFile.lastIndexOf("."))) + "_"
-							+ Calendar.getInstance().getTimeInMillis() + tenFile.substring(tenFile.lastIndexOf("."));
-					setAvatarImage((org.zkoss.image.Image) media);
-					setPathAvatar(tenFile);
-					if (vmsgs != null) {
-						vmsgs.clearKeyMessages("errLabel");
-					}
-					BindUtils.postNotifyChange(null, null, this, "avatarImage");
-					BindUtils.postNotifyChange(null, null, this, "pathAvatar");
-				}
-			} else {
-				showNotification("Chọn hình ảnh theo đúng định dạng (*.png, *.jpg)", "", "danger");
-			}
-		} else {
-			showNotification("Không phải hình ảnh", "", "danger");
-		}
-	}
-
-	@Command
-	public void deleteAvatarImage(@BindingParam("vm") NguoiDung nhanVien) {
-		Messagebox.show("Bạn có chắc chắn muốn xóa hình ảnh này ", "Xác nhận", Messagebox.OK | Messagebox.CANCEL,
-				Messagebox.QUESTION, new EventListener<Event>() {
-					@Override
-					public void onEvent(final Event event) {
-						if (Messagebox.ON_OK.equals(event.getName())) {
-							setAvatarImage(null);
-							setPathAvatar(null);
-							BindUtils.postNotifyChange(null, null, nhanVien, "avatarImage");
-							showNotification("Đã xóa", "", "success");
-						}
-					}
-				});
-	}
-
-	protected void saveImage() throws IOException {
-		Image imageContent = getAvatarImage();
-		if (imageContent != null) {
-			String path = this.folderStoreImage();
-			final File baseDir = new File(path.concat(getPathAvatar()));
-			Files.copy(baseDir, imageContent.getStreamData());
-			setAvatarImage(null);
-		}
-	}
-
-	private void loadImageIsView() throws FileNotFoundException, IOException {
-		if (getPathAvatar() != null && !"".equals(getPathAvatar())) {
-			String root = ctx().getEnvironment().getProperty("filestore.root");
-			String filesFolder = root + ctx().getEnvironment().getProperty("filestore.files");
-			String imageFolder = filesFolder + ctx().getEnvironment().getProperty("filestore.folderimage");
-			String path = imageFolder + getPathAvatar();
-			if (new File(path).exists()) {
-				String pathCompare = path.substring(0, path.lastIndexOf(File.separator) + 1)
-						+ path.substring(path.lastIndexOf(File.separator) + 1);
-				String imgName = pathCompare.substring(path.lastIndexOf(File.separator) + 1);
-				try (FileInputStream fis = new FileInputStream(new File(path));) {
-					setAvatarImage(new AImage(imgName, fis));
-				}
-			}
-		}
-	}
-
-	@Command
-	public void saveNhanVien(@BindingParam("list") final Object listObject, @BindingParam("attr") final String attr,
-			@BindingParam("wdn") final Window wdn) throws IOException {
-		if (matKhauUpdate != null && !"".equals(matKhauUpdate)) {
-			matKhau2 = matKhauUpdate;
-		}
-		if (matKhau2 != null && !matKhau2.isEmpty()) {
-			updatePassword(matKhau2);
-		}
-		if (vaiTro != null) {
-			vaiTros = new HashSet<>();
-			getVaiTros().add(vaiTro);
-		}
-		saveImage();
-		save();
-		wdn.detach();
-		BindUtils.postNotifyChange(null, null, this, "*");
-		BindUtils.postNotifyChange(null, null, listObject, attr);
 	}
 
 	public String getCookieToken(long expire) {
@@ -633,18 +466,6 @@ public class NguoiDung extends Model<NguoiDung> {
 	public void ChangePassword() {
 		setChange(isChange() ? false : true);
 		BindUtils.postNotifyChange(null, null, this, "change");
-	}
-
-	@Command
-	public void saveTaiKhoan() {
-		if (matKhau2 != null && !matKhau2.isEmpty()) {
-			updatePassword(matKhau2);
-		}
-		save();
-		setChange(false);
-		setEditable(false);
-		BindUtils.postNotifyChange(null, null, this, "change");
-		BindUtils.postNotifyChange(null, null, this, "editable");
 	}
 
 	@Command
@@ -797,21 +618,6 @@ public class NguoiDung extends Model<NguoiDung> {
 				}
 			}
 		};
-	}
-
-	@Command
-	public void updateNhanVien(@BindingParam("vm") NguoiDung vm, @BindingParam("wdn") Window wdn,
-			@BindingParam("vm2") NguoiDung vm2) throws IOException {
-		if (matKhauUpdate != null && !"".equals(matKhauUpdate)) {
-			matKhau2 = matKhauUpdate;
-			updatePassword(matKhau2);
-		}
-		vm2.setAvatarImage(vm.getAvatarImage());
-		saveImage();
-		save();
-		updateTokenNguoiDung();
-		BindUtils.postNotifyChange(null, null, vm2, "*");
-		wdn.detach();
 	}
 
 	// đã sửa đây

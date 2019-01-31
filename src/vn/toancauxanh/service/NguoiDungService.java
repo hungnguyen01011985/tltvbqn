@@ -83,21 +83,16 @@ public final class NguoiDungService extends BasicService<NguoiDung> {
 		String paramtrangThai = MapUtils.getString(argDeco(), "trangThai", "").trim();
 		String tuKhoa = MapUtils.getString(argDeco(), "tuKhoa", "").trim();
 		Long paramVaiTro = (Long) argDeco().get(Labels.getLabel("param.vaitro"));
-		Long paramPhongBan = (Long) argDeco().get("phongBan");
 		JPAQuery<NguoiDung> q = find(NguoiDung.class);
 		q.where(QNguoiDung.nguoiDung.email.ne("admin@greenglobal.vn"));
 
 		if (tuKhoa != null && !tuKhoa.isEmpty()) {
-			q.where(QNguoiDung.nguoiDung.hoVaTen.containsIgnoreCase(tuKhoa));
+			q.where(QNguoiDung.nguoiDung.taiKhoan.containsIgnoreCase(tuKhoa));
 		}
 
 		if (paramVaiTro != null) {
 			VaiTro vaiTro = find(VaiTro.class).where(QVaiTro.vaiTro.id.eq(paramVaiTro)).fetchFirst();
 			q.where(QNguoiDung.nguoiDung.vaiTros.contains(vaiTro));
-		}
-
-		if (paramPhongBan != null) {
-			q.where(QNguoiDung.nguoiDung.phongBan.id.eq(paramPhongBan));
 		}
 
 		if (paramtrangThai != null && !paramtrangThai.isEmpty()) {
@@ -175,7 +170,7 @@ public final class NguoiDungService extends BasicService<NguoiDung> {
 		} else {
 			tacGiasTimKiem.clear();
 			tacGiasTimKiem.addAll(find(NguoiDung.class).where(QNguoiDung.nguoiDung.trangThai.ne(core().TT_DA_XOA))
-					.where(QNguoiDung.nguoiDung.hoVaTen.like("%" + name + "%")).orderBy(QNguoiDung.nguoiDung.hoVaTen.asc())
+					.where(QNguoiDung.nguoiDung.taiKhoan.like("%" + name + "%")).orderBy(QNguoiDung.nguoiDung.taiKhoan.asc())
 					.fetch());
 		}
 		BindUtils.postNotifyChange(null, null, this, "tacGiasTimKiem");

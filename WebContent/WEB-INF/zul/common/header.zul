@@ -59,10 +59,9 @@
 					<n:li class="dropdown pd-header-avarta" style="display: inline-block">
 						<n:a class="dropdown-toggle box-header-users" href="#">
 							<div class="avatar-home">
-				         		<image visible="@load(vm.avatarImage ne null)" content="@load(vm.avatarImage eq null ? image : vm.avatarImage)"></image>
-				         		<image visible="@load(vm.avatarImage eq null)" src="/assets/img/employeebig.png"></image>
+				         		<image src="/assets/img/employeebig.png"></image>
 				         	</div>
-				         	<x:span>${vm.hoVaTen}</x:span>
+				         	<x:span>${vm.tenHienThi}</x:span>
 							<n:i class="fa fa-chevron-down"></n:i>
 						</n:a>
 						<n:ul class="dropdown-menu dropdown-menu-right dropdown-user">

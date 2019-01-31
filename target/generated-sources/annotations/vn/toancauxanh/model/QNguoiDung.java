@@ -24,25 +24,25 @@ public class QNguoiDung extends EntityPathBase<NguoiDung> {
 
     public final QModel _super;
 
-    public final BooleanPath checkKichHoat = createBoolean("checkKichHoat");
+    public final BooleanPath active = createBoolean("active");
 
-    public final StringPath chucVu = createString("chucVu");
+    public final BooleanPath block = createBoolean("block");
+
+    public final BooleanPath checkKichHoat = createBoolean("checkKichHoat");
 
     //inherited
     public final BooleanPath daXoa;
 
-    public final StringPath diaChi = createString("diaChi");
-
     public final StringPath email = createString("email");
-
-    public final StringPath hoVaTen = createString("hoVaTen");
 
     //inherited
     public final NumberPath<Long> id;
 
-    public final StringPath matKhau = createString("matKhau");
+    public final StringPath loaiTaiKhoan = createString("loaiTaiKhoan");
 
-    public final DateTimePath<java.util.Date> ngaySinh = createDateTime("ngaySinh", java.util.Date.class);
+    public final StringPath loaiXacThuc = createString("loaiXacThuc");
+
+    public final StringPath matKhau = createString("matKhau");
 
     //inherited
     public final DateTimePath<java.util.Date> ngaySua;
@@ -56,17 +56,13 @@ public class QNguoiDung extends EntityPathBase<NguoiDung> {
     // inherited
     public final QNguoiDung nguoiTao;
 
-    public final StringPath pathAvatar = createString("pathAvatar");
-
-    public final QPhongBan phongBan;
-
     public final SetPath<String, StringPath> quyens = this.<String, StringPath>createSet("quyens", String.class, StringPath.class, PathInits.DIRECT2);
 
     public final StringPath salkey = createString("salkey");
 
-    public final BooleanPath selectedDV = createBoolean("selectedDV");
+    public final StringPath taiKhoan = createString("taiKhoan");
 
-    public final StringPath soDienThoai = createString("soDienThoai");
+    public final StringPath tenHienThi = createString("tenHienThi");
 
     //inherited
     public final StringPath trangThai;
@@ -100,7 +96,6 @@ public class QNguoiDung extends EntityPathBase<NguoiDung> {
         this.ngayTao = _super.ngayTao;
         this.nguoiSua = _super.nguoiSua;
         this.nguoiTao = _super.nguoiTao;
-        this.phongBan = inits.isInitialized("phongBan") ? new QPhongBan(forProperty("phongBan"), inits.get("phongBan")) : null;
         this.trangThai = _super.trangThai;
         this.vaiTro = inits.isInitialized("vaiTro") ? new QVaiTro(forProperty("vaiTro"), inits.get("vaiTro")) : null;
     }

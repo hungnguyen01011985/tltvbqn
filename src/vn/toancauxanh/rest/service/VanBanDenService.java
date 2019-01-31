@@ -2,6 +2,7 @@ package vn.toancauxanh.rest.service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.vnpt.xml.base.parser.ParserException;
 import com.vnpt.xml.ed.Ed;
 import com.vnpt.xml.ed.header.MessageHeader;
 import com.vnpt.xml.ed.parser.EdXmlParser;
@@ -26,6 +28,7 @@ import com.vpcp.services.model.MessageType;
 import vn.toancauxanh.model.VanBan;
 import vn.toancauxanh.rest.model.PagingObject;
 import vn.toancauxanh.rest.repository.VanBanRepository;
+import vn.toancauxanh.vnpt.service.KnobstickServiceExtImp;
 
 @Service
 public class VanBanDenService {
@@ -37,9 +40,9 @@ public class VanBanDenService {
 		this.vanBanRepo = vanBanRepository;
 	}
 	
-	public PagingObject<VanBan> saveAllVanBanDen(Pageable pageable) throws Exception {
+	public PagingObject<VanBan> saveAllVanBanDen(Pageable pageable) throws ParserException, NoSuchAlgorithmException, IOException {
 		System.out.println(123);
-		KnobstickServiceImp knobstickService = new KnobstickServiceImp();
+		KnobstickServiceImp knobstickService = new KnobstickServiceExtImp(null, null);
 		System.out.println("hung123");
 		GetReceivedEdocResult getReceivedEdoc = knobstickService.getReceivedEdocList(createJsonHeaderGetReceivedEdoc());
 		System.out.println("hung");
@@ -52,15 +55,11 @@ public class VanBanDenService {
 					Ed fileEd = new Ed();
 					String fileUrl="";
 					String checkSum="";
-					try {
-						inputStream = new FileInputStream(file);
-						fileEd = new EdXmlParser().parse(inputStream);
-						mesageHeader = (MessageHeader) fileEd.getHeader().getMessageHeader();
-						checkSum = checkSum(file);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-
+					inputStream = new FileInputStream(file);
+					fileEd = new EdXmlParser().parse(inputStream);
+					mesageHeader = (MessageHeader) fileEd.getHeader().getMessageHeader();
+					checkSum = checkSum(file);
+			
 					System.out.println("code : " + mesageHeader.getCode().getCodeNumber());
 					System.out.println("subject : " + mesageHeader.getSubject());
 					System.out.println("documentId : " + mesageHeader.getDocumentId());

@@ -23,37 +23,6 @@
 			</div>
 		</div>
 		<div class="panel-box border-box">
-			<div zclass="row mg-top-no-line">
-				<div zclass="col-md-7">
-					<div zclass="form-group">
-						<x:span class="issue-search">Tài khoản người dùng</x:span>
-						<textbox class="form-control" value="@bind(vm.arg.tuKhoa)" onOK="@command('cmd', notify=vm, attr='targetQueryNhanVien')" placeholder="Nhập tên người dùng..."></textbox>
-						<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
-					</div>
-				</div>
-				<div zclass="col-md-3">
-					<div zclass="form-group">
-						<x:span class="issue-search">Phòng ban</x:span> 
-						<combobox readonly="true" model="@load(entry.phongBans.listPhongBanAndNull)"
-							value="@load(vm.arg.phongBan eq null ? 'Tất cả' : vm.arg.phongBan.ten)" selectedItem="@bind(vm.arg.phongBan)" class="his" placeholder="Chọn phòng ban" width="100%">
-							<template name="model">
-								<comboitem label="@load(each eq null ? 'Tất cả' : each.ten)" />
-							</template>
-						</combobox>
-						<label zclass="error" value="@load(vmsgs[self.previousSibling])" />
-					</div>
-				</div>
-				<div zclass="col-md-2">
-					<div zclass="form-group">
-						<x:a class="btn btn-base btn-green mgn-top-26" zk:onClick="@command('cmd', notify=vm, attr='targetQueryNhanVien')">
-							<x:image class="img-title" src="${contexPath}/assets/icon-bxtdn/search.svg"/>
-							<span>Tìm kiếm</span>
-						</x:a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="panel-box border-box">
 			<div zclass="row">
 				<div zclass="col-lg-12">
 					<div class="title-form">
@@ -67,26 +36,28 @@
 						emptyMessage="Không có dữ liệu nào trong danh sách">
 						<columns>
 							<column label="STT" style="text-align:center" width="42px"/>
-							<column label="Tên"/>
-							<column label="Email" width="190px"/>
-							<column label="Phòng ban" width="120px"/>
-							<column label="Vị trí" width="110px" />
-							<column label="Thao tác" width="120px"/>
+							<column label="Tên Hiển Thị" width="300px"/>
+							<column label="Tài Khoản" width="300px"/>
+							<column label="Thư Điện Tử" width="300px"/>
+							<column label="Kích Hoạt" width="80px" />
+							<column label="Khóa" width="80px" />
+							<column label="Thao tác"/>
 						</columns>
 						<template name="model">
 							<row viewModel="@id('item') @init(each)">
 								<label value="@bind(forEachStatus.index + 1 + vm.arg.page * vm.arg.pagesize)" style="display:flex; justify-content:center;"></label>
-								<label value="@load(each.hoVaTen)" zk:if="${entry.quyen.nguoidung_xem}"
+								<label value="@load(each.tenHienThi)" zk:if="${entry.quyen.nguoidung_xem}"
 									onClick="@command('redirectPageAction', zul='nguoidung/show-edit-nguoi-dung.zul', vmArgs=vm, vm=item, readOnly=true)" sclass="txt-link-table"/>
+								<label value="@load(item.taiKhoan)"></label>		
 								<label value="@load(item.email)"></label>
-								<label value="@load(item.phongBan.ten)"></label>
-								<label value="@load(item.vaiTroText)"></label>
+								<label value="@load(item.active)"></label>
+								<label value="@load(item.block)"></label>
 								<div class="thaotac" style="text-align:center">
-									<x:a label="Sửa" class="btn-thaotac left" zk:if="${entry.quyen.nguoidung_sua}" onClick="@command('redirectPageAction', zul='nguoidung/show-edit-nguoi-dung.zul',vmArgs=vm,vm=item,readOnly=false)">
+									<x:a label="Sửa" class="btn-thaotac left" onClick="@command('redirectPageAction', zul='nguoidung/show-edit-nguoi-dung.zul',vmArgs=vm,vm=item,readOnly=false)">
 										<x:image class="img-edit" width="20px" title="Sửa" src="${contexPath}/assets/icon-bxtdn/sua.svg"/>
 										<x:span>Sửa</x:span>
 									</x:a>
-									<x:a label="Xóa" class="btn-thaotac up-note" zk:if="${entry.quyen.nguoidung_xoa}"
+									<x:a label="Xóa" class="btn-thaotac up-note"
 										onClick="@command('deleteTrangThaiConfirmAndNotifyAndCheck', notify=vm, attr='targetQueryNhanVien', type='nguoidung')">
 										<x:image class="img-edit" title="Xóa" src="${contexPath}/assets/icon-bxtdn/xoa.svg"/>
 										<x:span>Xóa</x:span>
@@ -124,16 +95,6 @@
 							<paging pageSize="@load(vm.arg.pagesize)" totalSize="@load(vm.targetQueryNhanVien.fetchCount())" mold="os"
 							activePage="@bind(vm.arg.page)" onPaging="@command('cmd', notify=vm, attr='targetQueryNhanVien')" />
 						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row mg-and-bg-and-line">
-				<div zclass="col-md-12">
-					<div zclass="form-group right">
-						<x:a  class="btn btn-blue" zk:if="${entry.quyen.nguoidung_them}" zk:onClick="@command('redirectPage', zul='nguoidung/show-add-nguoi-dung.zul',vmArgs=vm,vm=null)">
-						<x:image class="img-title" src="${contexPath}/assets/icon-bxtdn/them-moi.svg"/>
-							<span>Thêm mới</span>
-						</x:a>
 					</div>
 				</div>
 			</div>
